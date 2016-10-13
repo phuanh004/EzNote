@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "465645994500",
+    "firebase_url": "https://eznote-28706.firebaseio.com",
+    "project_id": "eznote-28706",
+    "storage_bucket": "eznote-28706.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465645994500:android:2e61ccc99436d651",
+        "android_client_info": {
+          "package_name": "net.phuanh004.eznote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465645994500-v6t2drsop6cgdkgr823g7jf8oiv3rmj0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfUD5nFxi8y6kGW6rZNYyuMYfbl-AtB6U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
