@@ -1,6 +1,7 @@
 package net.phuanh004.eznote;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -12,6 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class NotesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,6 +48,19 @@ public class NotesActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
+        long unixSeconds = 1476331340;
+        Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
+        DateFormat simpleDateFormat = SimpleDateFormat.getDateInstance();
+
+        Toast.makeText(NotesActivity.this, simpleDateFormat.format(date), Toast.LENGTH_LONG).show();
+    }
+
+    private void setData(){
+
     }
 
     @Override
@@ -76,7 +97,7 @@ public class NotesActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
