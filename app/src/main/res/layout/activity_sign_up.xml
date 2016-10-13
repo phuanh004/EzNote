@@ -11,61 +11,89 @@
         android:text="EzNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="144dp"
         android:id="@+id/tvLogo"
+        android:textSize="30sp"
         tools:layout_editor_absoluteY="57dp"
-        android:textSize="30sp" />
+        tools:layout_editor_absoluteX="144dp" />
 
     <Button
         android:text="Sign Up"
-        android:layout_width="312dp"
+        android:layout_width="0dp"
         android:layout_height="60dp"
-        tools:layout_editor_absoluteX="36dp"
         android:id="@+id/btnSignUp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/etPhones" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/etPhones"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="42dp"
+        app:layout_constraintLeft_toLeftOf="@+id/etPhones" />
 
     <EditText
-        android:layout_width="312dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
         android:inputType="textPersonName"
         android:ems="10"
-        tools:layout_editor_absoluteX="36dp"
         android:id="@+id/etNames"
+        android:hint="Full Name"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/etEmails"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@+id/tvLogo"
-        android:hint="Full Name" />
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <EditText
-        android:layout_width="312dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
         android:inputType="textEmailAddress"
         android:ems="10"
-        tools:layout_editor_absoluteX="36dp"
         android:id="@+id/etEmails"
         android:hint="Email"
-        tools:layout_editor_absoluteY="190dp" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/etPasss"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <EditText
-        android:layout_width="312dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
         android:inputType="textPassword"
         android:ems="10"
-        tools:layout_editor_absoluteX="36dp"
         android:id="@+id/etPasss"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/etEmails"
-        android:hint="Password" />
+        android:hint="Password"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/etPhones"
+        app:layout_constraintRight_toRightOf="@+id/etEmails"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/etEmails" />
 
     <EditText
-        android:layout_width="312dp"
+        android:layout_width="0dp"
         android:layout_height="49dp"
         android:inputType="phone"
         android:ems="10"
-        tools:layout_editor_absoluteX="36dp"
         android:id="@+id/etPhones"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/etPasss"
-        android:hint="Phone" />
+        android:hint="Phone"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/btnSignUp"
+        app:layout_constraintRight_toRightOf="@+id/etPasss"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintLeft_toLeftOf="@+id/etPasss" />
 
 </android.support.constraint.ConstraintLayout>
