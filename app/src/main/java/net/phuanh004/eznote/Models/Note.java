@@ -1,5 +1,7 @@
 package net.phuanh004.eznote.Models;
 
+import java.util.Date;
+
 /**
  * Created by anhpham on 10/13/16.
  */
@@ -9,6 +11,9 @@ public class Note {
     private String title;
     private String content;
     private long SavedTime;
+
+    public Note() {
+    }
 
     public Note(String noteId, String title, String content, long savedTime) {
         this.noteId = noteId;
@@ -41,8 +46,8 @@ public class Note {
         this.content = content;
     }
 
-    public long getSavedTime() {
-        return SavedTime;
+    public Date getSavedTime() {
+        return new Date(SavedTime*1000L);
     }
 
     public void setSavedTime(long savedTime) {

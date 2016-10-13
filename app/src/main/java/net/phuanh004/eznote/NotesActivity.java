@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,14 +18,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import net.phuanh004.eznote.Adapter.AllNoteAdapter;
+import net.phuanh004.eznote.Models.Note;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
 public class NotesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private List<Note> noteList;
+    private Note note;
+    private AllNoteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,16 +63,37 @@ public class NotesActivity extends AppCompatActivity
 
 
 
+        noteList = new ArrayList<>();
 
-        long unixSeconds = 1476331340;
-        Date date = new Date(unixSeconds*1000L); // *1000 is to convert seconds to milliseconds
-        DateFormat simpleDateFormat = SimpleDateFormat.getDateInstance();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.allNoteRecyclerView);
 
-        Toast.makeText(NotesActivity.this, simpleDateFormat.format(date), Toast.LENGTH_LONG).show();
+        adapter = new AllNoteAdapter(NotesActivity.this,noteList);
+
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+
+        setData();
     }
 
     private void setData(){
+        note = new Note();
+        note.setTitle("Note header 1");
+        note.setSavedTime(1372339860);
+        noteList.add(note);
 
+        note = new Note();
+        note.setTitle("Note header 2");
+        note.setSavedTime(1456977906);
+        noteList.add(note);
+
+        note = new Note();
+        note.setTitle("Note header 3");
+        note.setSavedTime(1456985104);
+        noteList.add(note);
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override
