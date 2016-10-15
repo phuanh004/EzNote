@@ -5,7 +5,7 @@
     android:id="@+id/activity_sign_up"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="net.phuanh004.eznote.SignUpActivity">
+    tools:context="net.phuanh004.eznote.SignUpActivity" >
 
     <TextView
         android:text="EzNote"
