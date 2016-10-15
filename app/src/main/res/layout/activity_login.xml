@@ -29,12 +29,10 @@
         android:layout_height="50dp"
         android:id="@+id/btnLogin"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="@+id/etPass"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="186dp"
-        app:layout_constraintLeft_toLeftOf="@+id/etPass" />
+        app:layout_constraintLeft_toLeftOf="@+id/etPass"
+        tools:layout_editor_absoluteY="331dp" />
 
     <TextView
         android:text="Sign Up"
@@ -56,15 +54,11 @@
         android:ems="10"
         android:id="@+id/etPass"
         android:hint="Password"
-        tools:layout_constraintRight_creator="1"
         tools:layout_constraintBottom_creator="1"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="27dp"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="24dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintRight_toRightOf="@+id/etEmail"
+        app:layout_constraintLeft_toLeftOf="@+id/etEmail" />
 
     <EditText
         android:layout_width="0dp"
@@ -73,16 +67,13 @@
         android:ems="10"
         android:id="@+id/etEmail"
         android:hint="Email"
-        tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         android:layout_marginStart="27dp"
         android:layout_marginEnd="27dp"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="100dp"
         tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="98dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tvLogo" />
+        android:layout_marginTop="64dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvLogo"
+        app:layout_constraintHorizontal_bias="0.57" />
 </android.support.constraint.ConstraintLayout>
