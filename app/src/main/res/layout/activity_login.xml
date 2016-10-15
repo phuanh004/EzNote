@@ -8,33 +8,46 @@
     tools:context="net.phuanh004.eznote.LoginActivity">
 
 
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/bg"
+        android:id="@+id/imageView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scaleType="centerCrop" />
 
-    <TextView
+    <ImageView
         android:text="EzNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvLogo"
-        android:textSize="30sp"
+        android:id="@+id/imgLogo"
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="83dp"
+        android:layout_marginTop="107dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
 
     <Button
         android:text="Login"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:id="@+id/btnLogin"
+        android:textColor="#FFFFFF"
         tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="@+id/etPass"
+        app:layout_constraintRight_toRightOf="@+id/layoutPass"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/etPass"
+        app:layout_constraintLeft_toLeftOf="@+id/layoutPass"
         app:layout_constraintHorizontal_bias="0.0"
         android:layout_marginTop="40dp"
-        app:layout_constraintTop_toBottomOf="@+id/etPass" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutPass"
+        android:backgroundTint="#009688" />
 
     <TextView
         android:text="Sign Up"
@@ -44,38 +57,54 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="47dp"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textSize="15sp" />
 
-    <EditText
+    <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/etPass"
-        android:hint="Password"
-        app:layout_constraintRight_toRightOf="@+id/etEmail"
-        app:layout_constraintLeft_toLeftOf="@+id/etEmail"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@+id/etEmail"
-        app:layout_constraintHorizontal_bias="0.0" />
+        android:id="@+id/layoutPass"
+        app:layout_constraintRight_toRightOf="@+id/layoutEmail"
+        app:layout_constraintLeft_toLeftOf="@+id/layoutEmail"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/layoutEmail"
+        app:layout_constraintHorizontal_bias="0.0">
 
-    <EditText
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:id="@+id/etPass"/>
+
+    </android.support.design.widget.TextInputLayout>
+    
+    <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/etEmail"
-        android:hint="Email"
+        android:id="@+id/layoutEmail"
         tools:layout_constraintRight_creator="1"
         android:layout_marginStart="27dp"
         android:layout_marginEnd="27dp"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="64dp"
-        app:layout_constraintTop_toBottomOf="@+id/tvLogo"
-        app:layout_constraintHorizontal_bias="0.57" />
+        app:layout_constraintHorizontal_bias="0.57"
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo">
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:id="@+id/etEmail"/>
+
+    </android.support.design.widget.TextInputLayout>
+    
 </android.support.constraint.ConstraintLayout>
