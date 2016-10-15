@@ -23,7 +23,6 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
-        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/layoutNames"
         android:layout_height="50dp"
@@ -37,6 +36,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPersonName"
             android:hint="Full name"
             android:id="@+id/etNames"/>
 
@@ -44,7 +44,6 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
-        android:inputType="textEmailAddress"
         android:ems="10"
         android:id="@+id/layoutEmails"
         android:layout_height="50dp"
@@ -60,6 +59,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:hint="Email"
             android:id="@+id/etEmails"/>
 
@@ -67,7 +67,6 @@
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
-        android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/layoutPasss"
         android:layout_height="50dp"
@@ -81,13 +80,13 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textPassword"
             android:hint="Password"
             android:id="@+id/etPasss"/>
 
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
-        android:inputType="phone"
         android:ems="10"
         android:id="@+id/layoutPhones"
         android:layout_width="0dp"
@@ -102,6 +101,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="phone"
             android:hint="Phone"
             android:id="@+id/etPhones"/>
 
