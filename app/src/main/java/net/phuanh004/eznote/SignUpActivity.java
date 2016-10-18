@@ -53,8 +53,10 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             String Name = etNames.getText().toString();
+                            String Phone = etPhones.getText().toString();
                             mDatabase = FirebaseDatabase.getInstance().getReference();
                             mDatabase.child("Users").child(mAuth.getCurrentUser().getUid().toString()).child("username").setValue(Name);
+                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid().toString()).child("phone").setValue(Phone);
                             Intent intent = new Intent(SignUpActivity.this,NotesActivity.class);
                             startActivity(intent);
                         }else {
