@@ -11,15 +11,17 @@ public class Note {
     private String title;
     private String content;
     private long SavedTime;
+    private String timeZone;
 
     public Note() {
     }
 
-    public Note(String noteId, String title, String content, long savedTime) {
+    public Note(String noteId, String title, String content, long savedTime, String timeZone) {
         this.noteId = noteId;
         this.title = title;
         this.content = content;
         SavedTime = savedTime;
+        this.timeZone = timeZone;
     }
 
     public String getNoteId() {
@@ -46,11 +48,19 @@ public class Note {
         this.content = content;
     }
 
-    public Date getSavedTime() {
-        return new Date(SavedTime*1000L);
+    public long getSavedTime() {
+        return SavedTime;
     }
 
     public void setSavedTime(long savedTime) {
         SavedTime = savedTime;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
     }
 }

@@ -20,8 +20,15 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import net.phuanh004.eznote.Adapter.AllNoteAdapter;
 import net.phuanh004.eznote.Models.Note;
@@ -29,6 +36,7 @@ import net.phuanh004.eznote.Models.Note;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -39,11 +47,16 @@ public class NotesActivity extends AppCompatActivity
 
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
 
     private List<Note> noteList;
     private Note note;
     private AllNoteAdapter adapter;
-    Button btnSignOut;
+    private Button btnSignOut;
+
+    private long currentTime;
+    private String currentuser;
+    private String timeZone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +83,10 @@ public class NotesActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        firebaseAuth = FirebaseAuth.getInstance();
         btnSignOut = (Button)findViewById(R.id.btnSignOut);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentuser = firebaseAuth.getCurrentUser().getUid();
 
         btnSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,11 +101,12 @@ public class NotesActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d("^^^", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d("^^^", "onAuthStateChanged:signed_in:" + currentuser);
 
                 } else {
                     // User is signed out
                     noteList = null;
+                    currentuser = null;
 
                     NotesActivity.this.finish();
                     Log.d("^^^", "onAuthStateChanged:signed_out");
@@ -99,6 +115,12 @@ public class NotesActivity extends AppCompatActivity
         };
 
         firebaseAuth.addAuthStateListener(mAuthListener);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+
+
 
         noteList = new ArrayList<>();
 
@@ -110,27 +132,76 @@ public class NotesActivity extends AppCompatActivity
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
         setData();
     }
 
     private void setData(){
-        note = new Note();
-        note.setTitle("Note header 1");
-        note.setSavedTime(1372339860);
-        noteList.add(note);
 
-        note = new Note();
-        note.setTitle("Note header 2");
-        note.setSavedTime(1456977906);
-        noteList.add(note);
+//        Log.d("^^^^", "setData: "+mDatabase.child("Notes").orderByChild("savedTime"));
 
-        note = new Note();
-        note.setTitle("Note header 3");
-        note.setSavedTime(1456985104);
-        noteList.add(note);
+        mDatabase.child("Notes").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                note = new Note();
 
-        adapter.notifyDataSetChanged();
+                note = dataSnapshot.getValue(Note.class);
+
+                noteList.add(note);
+                adapter.notifyDataSetChanged();
+//                System.out.println(note.getTimeZone());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+//        note = new Note();
+
+//        Calendar cal = Calendar.getInstance();
+//        timeZone = cal.getTimeZone().getID();
+//        currentTime = cal.getTimeInMillis() /1000L;
+
+//        note.setTitle("Note header 1");
+//        note.setSavedTime(currentTime);
+//        note.setTimeZone(timeZone);
+
+//        noteList.add(note);
+
+//        Set value
+        DatabaseReference mDatabaseNotePush = mDatabase.child("Notes").push();
+        mDatabaseNotePush.setValue(note);
+
+       mDatabase.child("Users").child(currentuser).child("notes").child(mDatabaseNotePush.getKey()).setValue("");
+
+
+//        note = new Note();
+//        note.setTitle("Note header 2");
+//        note.setSavedTime(1456977906);
+//        noteList.add(note);
+//
+//        note = new Note();
+//        note.setTitle("Note header 3");
+//        note.setSavedTime(1456985104);
+//        noteList.add(note);
+
+//        adapter.notifyDataSetChanged();
     }
 
     @Override

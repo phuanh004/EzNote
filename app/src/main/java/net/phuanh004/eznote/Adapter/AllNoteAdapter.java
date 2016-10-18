@@ -12,7 +12,9 @@ import net.phuanh004.eznote.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by anhpham on 10/13/16.
@@ -21,6 +23,7 @@ import java.util.List;
 public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHolder> {
     private Context mContext;
     private List<Note> noteList;
+    private DateFormat simpleDateFormat;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -32,6 +35,7 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
 
             noteHeaderTv = (TextView) view.findViewById(R.id.noteHeaderTv);
             noteTimeTv = (TextView) view.findViewById(R.id.noteTimeTv);
+            simpleDateFormat = SimpleDateFormat.getTimeInstance();
         }
     }
 
@@ -52,10 +56,11 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
 
-        holder.noteHeaderTv.setText(noteList.get(position).getTitle());
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(noteList.get(position).getTimeZone()));
 
-        DateFormat simpleDateFormat = SimpleDateFormat.getTimeInstance();
-        holder.noteTimeTv.setText(simpleDateFormat.format(noteList.get(position).getSavedTime()));
+        holder.noteHeaderTv.setText(noteList.get(position).getTitle());
+        holder.noteTimeTv.setText(simpleDateFormat
+                .format( new Date(noteList.get(position).getSavedTime()*1000L) ));
 
 //        holder.title.setText(album.getName());
 
