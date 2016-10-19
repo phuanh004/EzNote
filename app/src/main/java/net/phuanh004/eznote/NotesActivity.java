@@ -1,5 +1,6 @@
 package net.phuanh004.eznote;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -69,8 +70,10 @@ public class NotesActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                Intent intent = new Intent(NotesActivity.this, ManageNoteActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -117,8 +120,6 @@ public class NotesActivity extends AppCompatActivity
         firebaseAuth.addAuthStateListener(mAuthListener);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
 
 
 
@@ -185,10 +186,10 @@ public class NotesActivity extends AppCompatActivity
 //        noteList.add(note);
 
 //        Set value
-        DatabaseReference mDatabaseNotePush = mDatabase.child("Notes").push();
-        mDatabaseNotePush.setValue(note);
+//        DatabaseReference mDatabaseNotePush = mDatabase.child("Notes").push();
+//        mDatabaseNotePush.setValue(note);
 
-       mDatabase.child("Users").child(currentuser).child("notes").child(mDatabaseNotePush.getKey()).setValue("");
+       mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
 
 
 //        note = new Note();
