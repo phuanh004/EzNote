@@ -29,12 +29,15 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
 
         private TextView noteHeaderTv;
         private TextView noteTimeTv;
+        private TextView noteContentTv;
 
         MyViewHolder(View view) {
             super(view);
 
             noteHeaderTv = (TextView) view.findViewById(R.id.noteHeaderTv);
             noteTimeTv = (TextView) view.findViewById(R.id.noteTimeTv);
+            noteContentTv = (TextView) view.findViewById(R.id.noteContentTv);
+
             simpleDateFormat = SimpleDateFormat.getTimeInstance();
         }
     }
@@ -61,6 +64,8 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
         holder.noteHeaderTv.setText(noteList.get(position).getTitle());
         holder.noteTimeTv.setText(simpleDateFormat
                 .format( new Date(noteList.get(position).getSavedTime()*1000L) ));
+
+        holder.noteContentTv.setText(noteList.get(position).getContent());
 
 //        holder.title.setText(album.getName());
 

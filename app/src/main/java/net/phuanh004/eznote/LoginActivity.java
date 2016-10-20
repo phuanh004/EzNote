@@ -28,6 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (getActionBar() != null){
+            getActionBar().hide();
+        }
+
+
         mAuth = FirebaseAuth.getInstance();
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
         etEmail = (EditText) findViewById(R.id.etEmail);

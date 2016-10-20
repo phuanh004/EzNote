@@ -2,6 +2,7 @@ package net.phuanh004.eznote;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,6 +47,8 @@ import java.util.TimeZone;
 public class NotesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    boolean doubleBackToExitPressedOnce = false;
+
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
@@ -72,7 +75,7 @@ public class NotesActivity extends AppCompatActivity
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                Intent intent = new Intent(NotesActivity.this, ManageNoteActivity.class);
+                Intent intent = new Intent(NotesActivity.this, NoteManageActivity.class);
                 startActivity(intent);
             }
         });
@@ -140,7 +143,7 @@ public class NotesActivity extends AppCompatActivity
 
 //        Log.d("^^^^", "setData: "+mDatabase.child("Notes").orderByChild("savedTime"));
 
-        mDatabase.child("Notes").addChildEventListener(new ChildEventListener() {
+        mDatabase.child("Users").child(currentuser).child("notes").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 note = new Note();
@@ -148,7 +151,7 @@ public class NotesActivity extends AppCompatActivity
                 note = dataSnapshot.getValue(Note.class);
 
                 noteList.add(note);
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemInserted(noteList.size() - 1);
 //                System.out.println(note.getTimeZone());
             }
 
@@ -174,7 +177,7 @@ public class NotesActivity extends AppCompatActivity
         });
 
 //        note = new Note();
-
+//
 //        Calendar cal = Calendar.getInstance();
 //        timeZone = cal.getTimeZone().getID();
 //        currentTime = cal.getTimeInMillis() /1000L;
@@ -189,7 +192,7 @@ public class NotesActivity extends AppCompatActivity
 //        DatabaseReference mDatabaseNotePush = mDatabase.child("Notes").push();
 //        mDatabaseNotePush.setValue(note);
 
-       mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
+//       mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
 
 
 //        note = new Note();
@@ -211,7 +214,24 @@ public class NotesActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+
+            if (doubleBackToExitPressedOnce) {
+//                super.onBackPressed();
+                this.finishAffinity();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
         }
     }
 
