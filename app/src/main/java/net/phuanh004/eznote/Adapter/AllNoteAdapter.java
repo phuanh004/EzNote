@@ -1,13 +1,20 @@
 package net.phuanh004.eznote.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import net.phuanh004.eznote.Models.Note;
+import net.phuanh004.eznote.NoteManageActivity;
+import net.phuanh004.eznote.NotesActivity;
 import net.phuanh004.eznote.R;
 
 import java.text.DateFormat;
@@ -30,6 +37,7 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
         private TextView noteHeaderTv;
         private TextView noteTimeTv;
         private TextView noteContentTv;
+        private CardView noteCardView;
 
         MyViewHolder(View view) {
             super(view);
@@ -37,6 +45,7 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
             noteHeaderTv = (TextView) view.findViewById(R.id.noteHeaderTv);
             noteTimeTv = (TextView) view.findViewById(R.id.noteTimeTv);
             noteContentTv = (TextView) view.findViewById(R.id.noteContentTv);
+            noteCardView = (CardView) view.findViewById(R.id.noteCardView);
 
             simpleDateFormat = SimpleDateFormat.getTimeInstance();
         }
@@ -57,7 +66,7 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         simpleDateFormat.setTimeZone(TimeZone.getTimeZone(noteList.get(position).getTimeZone()));
 
@@ -66,6 +75,27 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
                 .format( new Date(noteList.get(position).getSavedTime()*1000L) ));
 
         holder.noteContentTv.setText(noteList.get(position).getContent());
+
+        holder.noteCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, NoteManageActivity.class);
+                mContext.startActivity(intent);
+            }
+        });
+
+        holder.noteCardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("^^^^", "onLongClick: " + noteList.get(position).getNoteId());
+
+                if(mContext instanceof NotesActivity){
+                    ((NotesActivity)mContext).showDeleteDialog(noteList.get(position).getNoteId());
+                }
+                return false;
+            }
+        });
+
 
 //        holder.title.setText(album.getName());
 
@@ -100,6 +130,7 @@ public class AllNoteAdapter extends RecyclerView.Adapter<AllNoteAdapter.MyViewHo
 //            }
 //        });
     }
+
 
     @Override
     public int getItemCount() {

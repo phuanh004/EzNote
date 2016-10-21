@@ -1,13 +1,16 @@
 package net.phuanh004.eznote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.phuanh004.eznote.Adapter.AllNoteAdapter;
+import net.phuanh004.eznote.Adapter.NoteHolder;
 import net.phuanh004.eznote.Models.Note;
 
 import java.text.DateFormat;
@@ -55,12 +60,22 @@ public class NotesActivity extends AppCompatActivity
 
     private List<Note> noteList;
     private Note note;
-    private AllNoteAdapter adapter;
+//    private AllNoteAdapter adapter;
+    private FirebaseRecyclerAdapter adapter;
     private Button btnSignOut;
 
     private long currentTime;
     private String currentuser;
     private String timeZone;
+
+    private DateFormat simpleDateFormat;
+    private List<String> listNoteKeys;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,38 +136,58 @@ public class NotesActivity extends AppCompatActivity
         };
 
         firebaseAuth.addAuthStateListener(mAuthListener);
-
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
 
 
         noteList = new ArrayList<>();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.allNoteRecyclerView);
 
-        adapter = new AllNoteAdapter(NotesActivity.this,noteList);
-
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
+//        adapter = new AllNoteAdapter(NotesActivity.this,noteList);
+//
+//        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
+//        recyclerView.setLayoutManager(mLayoutManager);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//        recyclerView.setAdapter(adapter);
         setData();
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
+            @Override
+            protected void populateViewHolder(NoteHolder viewHolder, Note model, int position) {
+                simpleDateFormat = SimpleDateFormat.getTimeInstance();
+                simpleDateFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
+
+                viewHolder.setTitle(model.getTitle());
+                viewHolder.setTime(simpleDateFormat
+                        .format( new Date(model.getSavedTime()*1000L) ));
+                viewHolder.setContent(model.getContent());
+
+                viewHolder.addRemoveCard(NotesActivity.this, listNoteKeys.get(position));
+            }
+        };
+        recyclerView.setAdapter(adapter);
     }
 
     private void setData(){
 
+        listNoteKeys = new ArrayList<>();
 //        Log.d("^^^^", "setData: "+mDatabase.child("Notes").orderByChild("savedTime"));
 
         mDatabase.child("Users").child(currentuser).child("notes").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                note = new Note();
+//                note = new Note();
 
-                note = dataSnapshot.getValue(Note.class);
-
-                noteList.add(note);
-                adapter.notifyItemInserted(noteList.size() - 1);
-//                System.out.println(note.getTimeZone());
+                listNoteKeys.add(dataSnapshot.getKey());
+//                Log.d("^^^^", "onChildAdded: "+ dataSnapshot.getKey());
+//                note = dataSnapshot.getValue(Note.class);
+//                note.setNoteId(dataSnapshot.getKey());
+//
+//                noteList.add(note);
+//                adapter.notifyItemInserted(noteList.size() - 1);
             }
 
             @Override
@@ -162,7 +197,8 @@ public class NotesActivity extends AppCompatActivity
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                Log.d("^^^^", "onChildRemoved: " + dataSnapshot.getKey());
+                listNoteKeys.remove(dataSnapshot.getKey());
             }
 
             @Override
@@ -206,6 +242,38 @@ public class NotesActivity extends AppCompatActivity
 //        noteList.add(note);
 
 //        adapter.notifyDataSetChanged();
+    }
+
+    public void showDeleteDialog(final String id) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NotesActivity.this);
+//        builder.setTitle(getString(R.string.dialog_title));
+
+        builder.setMessage(getString(R.string.dialog_message_delete));
+
+        String positiveText = getString(R.string.delete);
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // positive button logic
+                        mDatabase.child("Users").child(currentuser).child("notes").child(id).removeValue();
+
+//                        Log.d("^^^^", "onClick: "+id);
+                    }
+                });
+
+        String negativeText = getString(android.R.string.cancel);
+        builder.setNegativeButton(negativeText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        // display dialog
+        dialog.show();
     }
 
     @Override
