@@ -13,8 +13,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import net.phuanh004.eznote.Models.User;
 
 public class SignUpActivity extends AppCompatActivity {
     EditText etEmails,etPasss,etNames,etPhones;
@@ -45,18 +49,18 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void SignUp(){
-        String User = etEmails.getText().toString();
-        String Pass = etPasss.getText().toString();
+        final String User = etEmails.getText().toString();
+        final String Pass = etPasss.getText().toString();
+        final String Name = etNames.getText().toString();
+        final String Phone = etPhones.getText().toString();
         mAuth.createUserWithEmailAndPassword(User, Pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            String Name = etNames.getText().toString();
-                            String Phone = etPhones.getText().toString();
                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid().toString()).child("username").setValue(Name);
-                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid().toString()).child("phone").setValue(Phone);
+                            User user = new User(Name,User,Pass,Phone,null);
+                            mDatabase.child("Users").setValue(user);
                             Intent intent = new Intent(SignUpActivity.this,NotesActivity.class);
                             startActivity(intent);
                         }else {
@@ -65,6 +69,22 @@ public class SignUpActivity extends AppCompatActivity {
                         }
 
                         // ...
+                    }
+                });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(Name)
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+
+                        }
                     }
                 });
 

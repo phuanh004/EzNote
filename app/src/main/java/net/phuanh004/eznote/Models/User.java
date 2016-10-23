@@ -1,34 +1,28 @@
 package net.phuanh004.eznote.Models;
 
+import android.net.Uri;
+
 /**
  * Created by Huu on 15/10/2016.
  */
 
 public class User {
 
-    private String uid;
     private String username;
     private String email;
     private String pass;
     private String phone;
+    private String avatar;
 
     public User() {
     }
 
-    public User(String uid, String username, String email, String pass, String phone) {
-        this.uid = uid;
+    public User(String username, String email, String pass, String phone, String avatar) {
         this.username = username;
         this.email = email;
         this.pass = pass;
         this.phone = phone;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
+        this.avatar = avatar;
     }
 
     public String getUsername() {
@@ -61,5 +55,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
