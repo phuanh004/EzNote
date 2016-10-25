@@ -1,16 +1,15 @@
 package net.phuanh004.eznote.Adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import net.phuanh004.eznote.NoteManageActivity;
 import net.phuanh004.eznote.NotesActivity;
 import net.phuanh004.eznote.R;
 
@@ -41,7 +40,7 @@ public class NoteHolder extends RecyclerView.ViewHolder {
         field.setText(content);
     }
 
-    public void addRemoveCard(final Context context, final String id) {
+    public void addRemoveNoteCardClick(final Context context, final String id) {
         CardView cardView = (CardView) mView.findViewById(R.id.noteCardView);
         cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -55,35 +54,20 @@ public class NoteHolder extends RecyclerView.ViewHolder {
         });
     }
 
-//    public void showDeleteDialog(final String id) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(mView.getContext());
-////        builder.setTitle(getString(R.string.dialog_title));
-//
-//        builder.setMessage(getString(R.string.dialog_message_delete));
-//
-//        String positiveText = getString(R.string.delete);
-//        builder.setPositiveButton(positiveText,
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        // positive button logic
-//                        mDatabase.child("Users").child(currentuser).child("notes").child(id).removeValue();
-//
-//                        Log.d("^^^^", "onClick: "+id);
-//                    }
-//                });
-//
-//        String negativeText = getString(android.R.string.cancel);
-//        builder.setNegativeButton(negativeText,
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//        AlertDialog dialog = builder.create();
-//        // display dialog
-//        dialog.show();
-//    }
+    public void addEditNoteCardClick(final Context context, final String id, final String title, final String content){
+        CardView cardView = (CardView) mView.findViewById(R.id.noteCardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("id", id);
+                bundle.putString("title", title);
+                bundle.putString("content", content);
+
+                Intent intent = new Intent(context, NoteManageActivity.class);
+                intent.putExtra("note",bundle);
+                context.startActivity(intent);
+            }
+        });
+    }
 }

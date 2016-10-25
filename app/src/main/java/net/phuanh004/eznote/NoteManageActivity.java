@@ -16,6 +16,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -33,6 +36,8 @@ public class NoteManageActivity extends AppCompatActivity {
     private Note note;
 
     private String currentuser;
+    private Bundle noteBundle;
+    private String noteid;
     private long currentTime;
     private String timeZone;
 
@@ -48,11 +53,52 @@ public class NoteManageActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        noteBundle = getIntent().getBundleExtra("note");
+
         noteHeaderEditText = (EditText) findViewById(R.id.noteHeaderEditText);
         noteContentEditText = (EditText) findViewById(R.id.noteContentEditText);
 
         firebaseAuth = FirebaseAuth.getInstance();
         currentuser = firebaseAuth.getCurrentUser().getUid();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        if (noteBundle != null) {
+            noteid = noteBundle.getString("id");
+            String noteTitle = noteBundle.getString("title");
+            String noteContent = noteBundle.getString("content");
+
+            noteHeaderEditText.setText(noteTitle);
+            noteContentEditText.setText(noteContent);
+
+            mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                    noteHeaderEditText.setText( dataSnapshot.child("title").getValue().toString() );
+//                    noteContentEditText.setText( dataSnapshot.child("content").getValue().toString() );
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Toast.makeText(NoteManageActivity.this, "This note was removed", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -71,8 +117,6 @@ public class NoteManageActivity extends AppCompatActivity {
         super.onBackPressed();
         note = new Note();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
         Calendar cal = Calendar.getInstance();
         timeZone = cal.getTimeZone().getID();
         currentTime = cal.getTimeInMillis() /1000L;
@@ -82,12 +126,15 @@ public class NoteManageActivity extends AppCompatActivity {
         note.setTimeZone(timeZone);
 
         if (!noteContentEditText.getText().toString().isEmpty()){
-            Toast.makeText(NoteManageActivity.this, "Added",Toast.LENGTH_SHORT).show();
             note.setContent(noteContentEditText.getText().toString());
+            note.setTitle(noteHeaderEditText.getText().toString());
 
-            if (!noteHeaderEditText.getText().toString().isEmpty()) { note.setTitle(noteHeaderEditText.getText().toString()); }
-            else { note.setTitle(noteContentEditText.getText().toString());}
-            mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
+            if(noteid != null){
+                mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("title").setValue(note.getTitle());
+                mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("content").setValue(note.getContent());
+            }else {
+                mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
+            }
         } else {
             Toast.makeText(NoteManageActivity.this, "Can't save empty note",Toast.LENGTH_SHORT).show();
         }
