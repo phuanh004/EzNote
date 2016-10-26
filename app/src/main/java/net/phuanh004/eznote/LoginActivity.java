@@ -30,10 +30,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (getActionBar() != null){
-            getActionBar().hide();
-        }
-
 
         mAuth = FirebaseAuth.getInstance();
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
@@ -98,12 +94,13 @@ public class LoginActivity extends AppCompatActivity {
                         }else {
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                            NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
-                            if (mWifi.isConnected()) {
+                            if (mWifi.isConnected() || mMobile.isConnected()) {
                                 Toast.makeText(LoginActivity.this, "Incorrect email or password",
                                 Toast.LENGTH_SHORT).show();
                             }else {
-                                Toast.makeText(LoginActivity.this, "Internet not access",
+                                Toast.makeText(LoginActivity.this, "No internet access",
                                         Toast.LENGTH_SHORT).show();
                             }
 

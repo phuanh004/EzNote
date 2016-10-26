@@ -11,7 +11,7 @@
     tools:context="net.phuanh004.eznote.LoginActivity">
 
 
-   <!-- <ImageView
+   <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:srcCompat="@drawable/bg"
@@ -21,7 +21,7 @@
         app:layout_constraintHorizontal_bias="0.93"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:scaleType="centerCrop" /> -->
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:text="EzNote"
@@ -31,7 +31,7 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="107dp"
+        android:layout_marginTop="40dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"

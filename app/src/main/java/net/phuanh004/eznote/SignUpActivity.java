@@ -2,6 +2,7 @@ package net.phuanh004.eznote;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import net.phuanh004.eznote.Models.User;
 public class SignUpActivity extends AppCompatActivity {
     EditText etEmails,etPasss,etNames,etPhones;
     Button btnSignUp;
+    TextInputLayout layoutNames,layoutEmails,layoutPhones,layoutPasss;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     @Override
@@ -35,14 +37,31 @@ public class SignUpActivity extends AppCompatActivity {
         etNames = (EditText)findViewById(R.id.etNames);
         etPhones = (EditText)findViewById(R.id.etPhones);
         btnSignUp = (Button)findViewById(R.id.btnSignUp);
+        layoutPasss = (TextInputLayout) findViewById(R.id.layoutPasss);
+        layoutEmails = (TextInputLayout) findViewById(R.id.layoutEmails);
+        layoutNames = (TextInputLayout) findViewById(R.id.layoutNames);
+        layoutPhones = (TextInputLayout) findViewById(R.id.layoutPhones);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SignUp();
+                String Emails = etEmails.getText().toString();
+                String Passs = etPasss.getText().toString();
+                String Names = etNames.getText().toString();
+                String Phones = etPhones.getText().toString();
+                if(Emails.equals("") && Passs.equals("") && Names.equals("") && Phones.equals("")){
+                    layoutEmails.setError("Email is required");
+                    layoutPasss.setError("Password is required");
+                    layoutNames.setError("Name is required");
+                    layoutPhones.setError("Phone is required");
+                }else {
+                    SignUp();
+                }
             }
         });
+
+
 
 
 
@@ -59,33 +78,29 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                            User mUser = new User(Name,User,Pass,Phone,null);
+                            User mUser = new User(Name,User,Pass,Phone,"null");
                             mDatabase.child("Users").setValue(mUser);
-                            FirebaseUser mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(Name)
+                                    .setDisplayName("Hana")
                                     .build();
-                            mFirebaseUser.updateProfile(profileUpdates)
+
+                            user.updateProfile(profileUpdates)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-
+                                                Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
+                                                startActivity(intent);
                                             }
                                         }
                                     });
-                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
-                            startActivity(intent);
                         }else {
                             Toast.makeText(SignUpActivity.this, "Failed!",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
-
-
-
     }
 }
