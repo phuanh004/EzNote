@@ -74,7 +74,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                            Intent intent = new Intent(SignUpActivity.this,NotesActivity.class);
+                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
                             startActivity(intent);
                         }else {
                             Toast.makeText(SignUpActivity.this, "Failed!",

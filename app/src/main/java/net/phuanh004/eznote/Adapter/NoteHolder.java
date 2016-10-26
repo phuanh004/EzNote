@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import net.phuanh004.eznote.Fragments.AllNoteFragment;
 import net.phuanh004.eznote.NoteManageActivity;
-import net.phuanh004.eznote.NotesActivity;
 import net.phuanh004.eznote.R;
 
 /**
@@ -19,7 +16,7 @@ import net.phuanh004.eznote.R;
  */
 
 public class NoteHolder extends RecyclerView.ViewHolder {
-    View mView;
+    private View mView;
 
     public NoteHolder(View itemView) {
         super(itemView);
@@ -40,20 +37,6 @@ public class NoteHolder extends RecyclerView.ViewHolder {
         TextView field = (TextView) mView.findViewById(R.id.noteContentTv);
         field.setText(content);
     }
-
-//    public void addRemoveNoteCardClick(final Context context, final String id) {
-//        CardView cardView = (CardView) mView.findViewById(R.id.noteCardView);
-//        cardView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                Log.d("^^^^", "onLongClick: " + id);
-//                if(context instanceof NotesActivity){
-//                    ((AllNoteFragment)context).showDeleteDialog(id);
-//                }
-//                return false;
-//            }
-//        });
-//    }
 
     public void addEditNoteCardClick(final Context context, final String id, final String title, final String content){
         CardView cardView = (CardView) mView.findViewById(R.id.noteCardView);

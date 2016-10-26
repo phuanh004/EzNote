@@ -3,7 +3,6 @@ package net.phuanh004.eznote.Fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -14,8 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import net.phuanh004.eznote.Adapter.NoteHolder;
 import net.phuanh004.eznote.Helper.RecyclerItemClickListener;
 import net.phuanh004.eznote.Models.Note;
-import net.phuanh004.eznote.NotesActivity;
+import net.phuanh004.eznote.MainActivity;
 import net.phuanh004.eznote.R;
 
 import java.text.DateFormat;
@@ -34,9 +31,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import static net.phuanh004.eznote.R.id.menuDisplayNameTextView;
-import static net.phuanh004.eznote.R.id.menuEmailTextView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,11 +63,11 @@ public class AllNoteFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((NotesActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_note);
+        ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_note);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        currentuser = ((NotesActivity)getActivity()).currentuser;
+        currentuser = ((MainActivity)getActivity()).currentuser;
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // Des Item
