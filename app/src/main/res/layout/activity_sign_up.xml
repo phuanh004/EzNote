@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
     tools:context="net.phuanh004.eznote.SignUpActivity">
 
-    <!-- <ImageView
+    <ImageView
        android:layout_width="0dp"
        android:layout_height="0dp"
        app:srcCompat="@drawable/bg"
@@ -20,7 +20,7 @@
        app:layout_constraintHorizontal_bias="0.93"
        app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintBottom_toBottomOf="parent"
-       android:scaleType="centerCrop" /> -->
+       android:scaleType="centerCrop" />
 
 
         <ImageView
@@ -31,24 +31,25 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="@+id/layoutNames"
-        android:layout_marginTop="104dp"
+        android:layout_marginTop="40dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/layoutNames"
         app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/logo"/>
+            app:srcCompat="@drawable/logo"
+            app:layout_constraintHorizontal_bias="0.53" />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
         android:ems="8"
         android:id="@+id/layoutNames"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="33dp"
         app:layout_constraintTop_toBottomOf="@+id/tvLogo"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="@+id/layoutEmails"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/layoutEmails"
-        app:layout_constraintHorizontal_bias="1.0">
+        app:layout_constraintHorizontal_bias="1.0" app:errorEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
@@ -63,15 +64,14 @@
         android:layout_width="0dp"
         android:ems="8"
         android:id="@+id/layoutEmails"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/layoutNames"
         tools:layout_constraintRight_creator="1"
         android:layout_marginStart="29dp"
         android:layout_marginEnd="29dp"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent" app:errorEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
@@ -86,13 +86,12 @@
         android:layout_width="0dp"
         android:ems="8"
         android:id="@+id/layoutPasss"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/layoutEmails"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="@+id/layoutEmails"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/layoutEmails">
+        app:layout_constraintLeft_toLeftOf="@+id/layoutEmails" app:errorEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
@@ -107,13 +106,12 @@
         android:ems="8"
         android:id="@+id/layoutPhones"
         android:layout_width="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/layoutPasss"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="@+id/layoutPasss"
         tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="@+id/layoutPasss">
+        app:layout_constraintLeft_toLeftOf="@+id/layoutPasss" app:errorEnabled="true">
 
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"

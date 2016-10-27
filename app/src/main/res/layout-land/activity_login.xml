@@ -18,10 +18,11 @@
         android:id="@+id/imageView2"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+       app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:text="EzNote"
@@ -31,48 +32,23 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="10dp"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:ems="8"
-        android:id="@+id/layoutEmail"
-        tools:layout_constraintRight_creator="1"
-        android:layout_marginStart="27dp"
-        android:layout_marginEnd="27dp"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.57"
-        android:layout_marginTop="33dp"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo"
-        >
-
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:hint="Email"
-            android:id="@+id/etEmail"/>
-
-    </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:ems="8"
         android:id="@+id/layoutPass"
         app:layout_constraintRight_toRightOf="@+id/layoutEmail"
         app:layout_constraintLeft_toLeftOf="@+id/layoutEmail"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/layoutEmail"
         app:layout_constraintHorizontal_bias="0.0"
+        app:errorEnabled="true"
         >
 
         <android.support.design.widget.TextInputEditText
@@ -95,7 +71,6 @@
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="@+id/layoutPass"
         app:layout_constraintHorizontal_bias="1.0"
-        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/layoutPass"
         android:backgroundTint="#009688" />
 
@@ -107,14 +82,38 @@
         tools:layout_constraintTop_creator="1"
         tools:layout_constraintRight_creator="1"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin"
         tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
         android:textSize="15sp" />
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="8"
+        android:id="@+id/layoutEmail"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginStart="27dp"
+        android:layout_marginEnd="27dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="0.57"
+        android:layout_marginTop="33dp"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo"
+        app:errorEnabled="true"
+        >
+
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Email"
+            android:id="@+id/etEmail"/>
+
+    </android.support.design.widget.TextInputLayout>
 
 
-    
 </android.support.constraint.ConstraintLayout>
 

@@ -1,6 +1,7 @@
 package net.phuanh004.eznote;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -83,7 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName("Hana")
+                                    .setDisplayName(Name)
                                     .build();
 
                             user.updateProfile(profileUpdates)
@@ -91,7 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Intent intent = new Intent(SignUpActivity.this,ProfileActivity.class);
+                                                Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
                                                 startActivity(intent);
                                             }
                                         }
