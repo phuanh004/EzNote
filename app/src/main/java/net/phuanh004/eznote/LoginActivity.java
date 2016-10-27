@@ -51,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
                 String User = etEmail.getText().toString();
                 String Pass = etPass.getText().toString();
                 if(Pass.equals("") && User.equals("")){
+                    layoutEmail.setErrorEnabled(true);
                     layoutEmail.setError("Email is required");
                     layoutPass.setError("Password is required");
                 }

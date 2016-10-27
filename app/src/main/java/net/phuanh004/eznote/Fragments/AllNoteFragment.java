@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +92,7 @@ public class AllNoteFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 listNoteKeys.add(dataSnapshot.getKey());
+                Log.d("^^^^", "onChildAdded: "+dataSnapshot);
 //                recyclerView.smoothScrollToPosition(listNoteKeys.size());
             }
 
