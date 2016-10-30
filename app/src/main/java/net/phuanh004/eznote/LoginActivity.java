@@ -55,14 +55,18 @@ public class LoginActivity extends AppCompatActivity {
                     layoutEmail.setError("Email is required");
                     layoutPass.setError("Password is required");
                 }
-                else if(Pass.equals("")){
-                    layoutEmail.setError(null);
-                    layoutPass.setError("Password is required");
-
-                }
                 else if(User.equals("")){
                     layoutEmail.setError("Email is required");
                     layoutPass.setError(null);
+                }
+                else if(Pass.equals("") && !isValidEmailAddress(User)){
+                    layoutEmail.setError("Email is valid");
+                    layoutPass.setError("Password is required");
+
+                }
+                else if(Pass.equals("") ){
+                    layoutEmail.setError(null);
+                    layoutPass.setError("Password is required");
                 }
                 else{
                     layoutEmail.setError(null);
@@ -82,6 +86,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    public boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
+    }
+
     private void Login() {
         String User = etEmail.getText().toString();
         String Pass = etPass.getText().toString();

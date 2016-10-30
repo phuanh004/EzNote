@@ -33,11 +33,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         mAuth = FirebaseAuth.getInstance();
-        etEmails = (EditText)findViewById(R.id.etEmails);
-        etPasss = (EditText)findViewById(R.id.etPasss);
-        etNames = (EditText)findViewById(R.id.etNames);
-        etPhones = (EditText)findViewById(R.id.etPhones);
-        btnSignUp = (Button)findViewById(R.id.btnSignUp);
+        etEmails = (EditText) findViewById(R.id.etEmails);
+        etPasss = (EditText) findViewById(R.id.etPasss);
+        etNames = (EditText) findViewById(R.id.etNames);
+        etPhones = (EditText) findViewById(R.id.etPhones);
+        btnSignUp = (Button) findViewById(R.id.btnSignUp);
         layoutPasss = (TextInputLayout) findViewById(R.id.layoutPasss);
         layoutEmails = (TextInputLayout) findViewById(R.id.layoutEmails);
         layoutNames = (TextInputLayout) findViewById(R.id.layoutNames);
@@ -51,21 +51,50 @@ public class SignUpActivity extends AppCompatActivity {
                 String Passs = etPasss.getText().toString();
                 String Names = etNames.getText().toString();
                 String Phones = etPhones.getText().toString();
-                if(Emails.equals("") && Passs.equals("") && Names.equals("") && Phones.equals("")){
+                if (Emails.equals("") && Passs.equals("") && Names.equals("") && Phones.equals("")) {
                     layoutEmails.setError("Email is required");
                     layoutPasss.setError("Password is required");
                     layoutNames.setError("Name is required");
                     layoutPhones.setError("Phone is required");
-                }else {
+                } else if (Emails.equals("") && Passs.equals("") && Phones.equals("")) {
+                    layoutEmails.setError("Email is required");
+                    layoutPasss.setError("Password is required");
+                    layoutNames.setError(null);
+                    layoutPhones.setError("Phone is required");
+                } else if (Passs.equals("") && Phones.equals("")) {
+                    layoutEmails.setError(null);
+                    layoutPasss.setError("Password is required");
+                    layoutNames.setError(null);
+                    layoutPhones.setError("Phone is required");
+                } else if (Phones.equals("")) {
+                    layoutEmails.setError(null);
+                    layoutPasss.setError(null);
+                    layoutNames.setError(null);
+                    layoutPhones.setError("Phone is required");
+                } else if (!isValidEmailAddress(Emails)) {
+                    layoutEmails.setError("Email is vaild");
+                    layoutPhones.setError(null);
+                } else if (Passs.length() < 6) {
+                    layoutEmails.setError(null);
+                    layoutPasss.setError("Password must be of minimum 6 characters");
+                } else {
+                    layoutEmails.setError(null);
+                    layoutPasss.setError(null);
+                    layoutNames.setError(null);
+                    layoutPhones.setError(null);
                     SignUp();
                 }
             }
         });
 
+    }
 
 
-
-
+    public boolean isValidEmailAddress(String email) {
+        String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
+        java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
+        java.util.regex.Matcher m = p.matcher(email);
+        return m.matches();
     }
 
     private void SignUp(){
@@ -86,17 +115,18 @@ public class SignUpActivity extends AppCompatActivity {
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(Name)
                                     .build();
-
-                            user.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
-                                                startActivity(intent);
+                            if(user != null) {
+                                user.updateProfile(profileUpdates)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                                    startActivity(intent);
+                                                }
                                             }
-                                        }
-                                    });
+                                        });
+                            }
                         }else {
                             Toast.makeText(SignUpActivity.this, "Failed!",
                                     Toast.LENGTH_SHORT).show();
