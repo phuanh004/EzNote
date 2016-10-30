@@ -51,36 +51,40 @@ public class SignUpActivity extends AppCompatActivity {
                 String Passs = etPasss.getText().toString();
                 String Names = etNames.getText().toString();
                 String Phones = etPhones.getText().toString();
-                if (Emails.equals("") && Passs.equals("") && Names.equals("") && Phones.equals("")) {
-                    layoutEmails.setError("Email is required");
-                    layoutPasss.setError("Password is required");
+                if (Names.equals("")) {
                     layoutNames.setError("Name is required");
-                    layoutPhones.setError("Phone is required");
-                } else if (Emails.equals("") && Passs.equals("") && Phones.equals("")) {
+                }
+                if (Emails.equals("")) {
                     layoutEmails.setError("Email is required");
+                }
+                if (Passs.equals("")) {
                     layoutPasss.setError("Password is required");
-                    layoutNames.setError(null);
+                }
+                if (Phones.equals("")) {
                     layoutPhones.setError("Phone is required");
-                } else if (Passs.equals("") && Phones.equals("")) {
-                    layoutEmails.setError(null);
-                    layoutPasss.setError("Password is required");
-                    layoutNames.setError(null);
-                    layoutPhones.setError("Phone is required");
-                } else if (Phones.equals("")) {
-                    layoutEmails.setError(null);
-                    layoutPasss.setError(null);
-                    layoutNames.setError(null);
-                    layoutPhones.setError("Phone is required");
-                } else if (!isValidEmailAddress(Emails)) {
+                }
+                if (!isValidEmailAddress(Emails) && !Emails.equals("")) {
                     layoutEmails.setError("Email is vaild");
-                    layoutPhones.setError(null);
-                } else if (Passs.length() < 6) {
-                    layoutEmails.setError(null);
+                }
+                if (Passs.length() < 6 && !Passs.equals("")) {
                     layoutPasss.setError("Password must be of minimum 6 characters");
-                } else {
+                }
+                if(!Names.equals("")) {
+                    layoutNames.setError(null);
+                }
+                if(isValidEmailAddress(Emails) && !Emails.equals("")) {
+                    layoutNames.setError(null);
+                }
+                if (Passs.length() >= 6 && !Passs.equals("")) {
+                    layoutPasss.setError(null);
+                }
+                if (!Phones.equals("")) {
+                    layoutPhones.setError(null);
+                }
+                if(isValidEmailAddress(Emails) && Passs.length() >= 6 && !Phones.equals("") && !Names.equals("")){
+                    layoutNames.setError(null);
                     layoutEmails.setError(null);
                     layoutPasss.setError(null);
-                    layoutNames.setError(null);
                     layoutPhones.setError(null);
                     SignUp();
                 }
@@ -111,11 +115,10 @@ public class SignUpActivity extends AppCompatActivity {
                             User mUser = new User(Name,User,Pass,Phone,"null");
                             mDatabase.child("Users").setValue(mUser);
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(Name)
-                                    .build();
                             if(user != null) {
+                                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                        .setDisplayName(Name)
+                                        .build();
                                 user.updateProfile(profileUpdates)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
