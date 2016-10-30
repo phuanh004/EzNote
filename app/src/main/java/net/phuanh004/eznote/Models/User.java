@@ -10,17 +10,15 @@ public class User {
 
     private String username;
     private String email;
-    private String pass;
     private String phone;
     private String avatar;
 
     public User() {
     }
 
-    public User(String username, String email, String pass, String phone, String avatar) {
+    public User(String username, String email, String phone, String avatar) {
         this.username = username;
         this.email = email;
-        this.pass = pass;
         this.phone = phone;
         this.avatar = avatar;
     }
@@ -39,14 +37,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPass() {
-        return pass;
-    }
-
-    public void setPass(String pass) {
-        this.pass = pass;
     }
 
     public String getPhone() {

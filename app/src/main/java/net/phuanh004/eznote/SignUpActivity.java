@@ -1,6 +1,9 @@
 package net.phuanh004.eznote;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
@@ -16,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -112,8 +116,8 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                            User mUser = new User(Name,User,Pass,Phone,"null");
-                            mDatabase.child("Users").setValue(mUser);
+                            User mUser = new User(Name,User,Phone,"null");
+                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if(user != null) {
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -131,8 +135,17 @@ public class SignUpActivity extends AppCompatActivity {
                                         });
                             }
                         }else {
-                            Toast.makeText(SignUpActivity.this, "Failed!",
-                                    Toast.LENGTH_SHORT).show();
+                            ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+                            NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+                            if (mWifi.isConnected() || mMobile.isConnected()) {
+                                Toast.makeText(SignUpActivity.this, "Email is tak",
+                                        Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(SignUpActivity.this, "No internet access",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
