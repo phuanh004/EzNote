@@ -140,7 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
                             NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
                             if (mWifi.isConnected() || mMobile.isConnected()) {
-                                Toast.makeText(SignUpActivity.this, "Email is tak",
+                                Toast.makeText(SignUpActivity.this, "Email is already registered",
                                         Toast.LENGTH_SHORT).show();
                             }else {
                                 Toast.makeText(SignUpActivity.this, "No internet access",
