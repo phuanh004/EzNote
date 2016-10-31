@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import net.phuanh004.eznote.Fragments.AllNoteFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
 
     boolean doubleBackToExitPressedOnce = false;
     public NavigationView navigationView;
@@ -44,14 +46,9 @@ public class MainActivity extends AppCompatActivity
     public String currentuser;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -69,7 +66,6 @@ public class MainActivity extends AppCompatActivity
 
         menuEmailTextView = (TextView) header.findViewById(R.id.menuEmailTextView);
         menuDisplayNameTextView = (TextView) header.findViewById(R.id.menuDisplayNameTextView);
-
 
         Fragment fragment = new AllNoteFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();

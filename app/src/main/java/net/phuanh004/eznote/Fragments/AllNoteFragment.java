@@ -2,6 +2,7 @@ package net.phuanh004.eznote.Fragments;
 
 
 import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.ChildEventListener;
@@ -19,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Adapter.NoteHolder;
 import net.phuanh004.eznote.Helper.RecyclerItemClickListener;
@@ -33,13 +36,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AllNoteFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private FirebaseRecyclerAdapter adapter;
+    @BindView(R.id.allNoteProgressBar) ProgressBar allNoteProgressBar;
+    @BindView(R.id.allNoteRecyclerView) RecyclerView recyclerView;
 
     public DatabaseReference mDatabase;
 
@@ -66,15 +72,17 @@ public class AllNoteFragment extends Fragment {
 
         ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_note);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        ButterKnife.bind(this, view);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = ((MainActivity)getActivity()).currentuser;
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // Des Item
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.allNoteRecyclerView);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener(){
@@ -88,11 +96,24 @@ public class AllNoteFragment extends Fragment {
         listNoteKeys = new ArrayList<>();
         setAdapter();
 
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allNoteProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         mDatabase.child("Users").child(currentuser).child("notes").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 listNoteKeys.add(dataSnapshot.getKey());
-                Log.d("^^^^", "onChildAdded: "+dataSnapshot);
+//                Log.d("^^^^", "onChildAdded: "+dataSnapshot);
 //                recyclerView.smoothScrollToPosition(listNoteKeys.size());
             }
 
@@ -120,19 +141,22 @@ public class AllNoteFragment extends Fragment {
 
     private void setAdapter(){
 
-        adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
+        FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
             @Override
             protected void populateViewHolder(NoteHolder viewHolder, Note model, int position) {
-                simpleDateFormat = SimpleDateFormat.getTimeInstance();
+//                simpleDateFormat = SimpleDateFormat.getTimeInstance();
+                simpleDateFormat = SimpleDateFormat.getDateInstance();
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
 
                 viewHolder.setTitle(model.getTitle());
                 viewHolder.setTime(simpleDateFormat
-                        .format( new Date(model.getSavedTime()*1000L) ));
-                viewHolder.setContent(model.getContent());
+                        .format(new Date(model.getSavedTime() * 1000L)));
 
-//                viewHolder.addRemoveNoteCardClick(getActivity(), listNoteKeys.get(position));
-                viewHolder.addEditNoteCardClick(getActivity(), listNoteKeys.get(position), model.getTitle(), model.getContent());
+                viewHolder.setContent(model.getContent());
+                if (model.getImages() != null) {
+                    viewHolder.setImage(model.getImages().entrySet().iterator().next().getValue());
+                }
+                viewHolder.addEditNoteCardClick(getActivity(), listNoteKeys.get(position), model);
             }
         };
         recyclerView.setAdapter(adapter);

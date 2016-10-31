@@ -1,17 +1,17 @@
 package net.phuanh004.eznote.Models;
 
-import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by anhpham on 10/13/16.
  */
-
 public class Note {
     private String noteId;
     private String title;
     private String content;
     private long SavedTime;
     private String timeZone;
+    private HashMap<String, String> images;
 
     public Note() {
     }
@@ -20,7 +20,7 @@ public class Note {
         this.noteId = noteId;
         this.title = title;
         this.content = content;
-        SavedTime = savedTime;
+        this.SavedTime = savedTime;
         this.timeZone = timeZone;
     }
 
@@ -62,5 +62,13 @@ public class Note {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public HashMap<String, String> getImages() {
+        return images;
+    }
+
+    public void setImages(HashMap<String, String> images) {
+        this.images = images;
     }
 }

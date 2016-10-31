@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import net.phuanh004.eznote.Models.Note;
 import net.phuanh004.eznote.NoteManageActivity;
 import net.phuanh004.eznote.R;
 
@@ -38,15 +43,20 @@ public class NoteHolder extends RecyclerView.ViewHolder {
         field.setText(content);
     }
 
-    public void addEditNoteCardClick(final Context context, final String id, final String title, final String content){
+    public void setImage(String image){
+        ImageView img = (ImageView) mView.findViewById(R.id.noteImageImg) ;
+        Glide.with(mView.getContext()).load(image).into(img);
+    }
+
+    public void addEditNoteCardClick(final Context context, final String id, final Note note){
         CardView cardView = (CardView) mView.findViewById(R.id.noteCardView);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Bundle bundle = new Bundle();
                 bundle.putString("id", id);
-                bundle.putString("title", title);
-                bundle.putString("content", content);
+                bundle.putString("title", note.getTitle());
+                bundle.putString("content", note.getContent());
 
                 Intent intent = new Intent(context, NoteManageActivity.class);
                 intent.putExtra("note",bundle);
