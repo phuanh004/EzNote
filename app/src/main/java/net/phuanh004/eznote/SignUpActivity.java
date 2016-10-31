@@ -55,36 +55,34 @@ public class SignUpActivity extends AppCompatActivity {
                 String Passs = etPasss.getText().toString();
                 String Names = etNames.getText().toString();
                 String Phones = etPhones.getText().toString();
-                if (Names.equals("")) {
-                    layoutNames.setError("Name is required");
-                }
-                if (Emails.equals("")) {
-                    layoutEmails.setError("Email is required");
-                }
                 if (Passs.equals("")) {
                     layoutPasss.setError("Password is required");
-                }
-                if (Phones.equals("")) {
-                    layoutPhones.setError("Phone is required");
-                }
-                if (!isValidEmailAddress(Emails) && !Emails.equals("")) {
-                    layoutEmails.setError("Email is vaild");
-                }
-                if (Passs.length() < 6 && !Passs.equals("")) {
+                }else if(Passs.length() < 6){
                     layoutPasss.setError("Password must be of minimum 6 characters");
-                }
-                if(!Names.equals("")) {
-                    layoutNames.setError(null);
-                }
-                if(isValidEmailAddress(Emails) && !Emails.equals("")) {
-                    layoutNames.setError(null);
-                }
-                if (Passs.length() >= 6 && !Passs.equals("")) {
+                }else {
                     layoutPasss.setError(null);
                 }
-                if (!Phones.equals("")) {
+
+                if (Phones.equals("")) {
+                    layoutPhones.setError("Phone is required");
+                }else {
                     layoutPhones.setError(null);
                 }
+
+                if (Names.equals("")) {
+                    layoutNames.setError("Name is required");
+                }else {
+                    layoutNames.setError(null);
+                }
+
+                if (Emails.equals("")) {
+                    layoutEmails.setError("Email is required");
+                }else if (!isValidEmailAddress(Emails)){
+                    layoutEmails.setError("Email is vaild");
+                }else{
+                    layoutEmails.setError(null);
+                }
+
                 if(isValidEmailAddress(Emails) && Passs.length() >= 6 && !Phones.equals("") && !Names.equals("")){
                     layoutNames.setError(null);
                     layoutEmails.setError(null);

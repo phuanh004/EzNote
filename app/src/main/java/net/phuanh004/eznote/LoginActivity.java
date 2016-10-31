@@ -50,18 +50,20 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String User = etEmail.getText().toString();
                 String Pass = etPass.getText().toString();
-                if(Pass.equals("")){
-                    layoutPass.setError("Password is required");
-                }
-                if(User.equals("")){
+                if (User.equals("")) {
                     layoutEmail.setError("Email is required");
+                }else if (!isValidEmailAddress(User)){
+                    layoutEmail.setError("Email is vaild");
+                }else{
+                    layoutEmail.setError(null);
                 }
 
-                if(!isValidEmailAddress(User) && !User.equals("")){
-                    layoutEmail.setError("Email is valid");
-                }
-                if(Pass.length() < 6 && !Pass.equals("")){
+                if (Pass.equals("")) {
+                    layoutPass.setError("Password is required");
+                }else if(Pass.length() < 6){
                     layoutPass.setError("Password must be of minimum 6 characters");
+                }else {
+                    layoutPass.setError(null);
                 }
                 if(isValidEmailAddress(User) && Pass.length() >=6 ){
                     layoutEmail.setError(null);
