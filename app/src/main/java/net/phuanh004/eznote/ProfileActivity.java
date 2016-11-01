@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,8 @@ public class ProfileActivity extends AppCompatActivity {
     public FirebaseAuth mAuth;
     public DatabaseReference mDatabase;
     public String currentuser;
-    TextView textviewName;
+    TextView tvName,tvEmail,tvPhone;
+    ImageView iveName,iveEmail,ivePhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +42,25 @@ public class ProfileActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser().getUid();
-        textviewName = (TextView)findViewById(R.id.textviewName);
+        tvName = (TextView)findViewById(R.id.tvName);
+        tvEmail = (TextView)findViewById(R.id.tvEmail);
+        tvPhone = (TextView)findViewById(R.id.tvPhone);
+        iveName = (ImageView)findViewById(R.id.iveName);
+        iveEmail = (ImageView)findViewById(R.id.iveEmail);
+        ivePhone = (ImageView)findViewById(R.id.ivePhone);
         if(mAuth.getCurrentUser() != null){
             mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Map<String,String> map = (Map)dataSnapshot.getValue();
                     String name = map.get("name");
+                    String email = map.get("email");
+                    String phone = map.get("phone");
+                    tvName.setText(name);
+                    tvEmail.setText(email);
+                    tvPhone.setText(phone);
                     setSupportActionBar(toolbar);
                     getSupportActionBar().setTitle(name);
-                    textviewName.setText(dataSnapshot.getValue().toString());
                 }
 
                 @Override
@@ -60,6 +71,28 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
+        iveName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Wow", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
+        iveEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Wow", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        ivePhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Wow", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
