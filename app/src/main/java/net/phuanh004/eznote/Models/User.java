@@ -8,7 +8,7 @@ import android.net.Uri;
 
 public class User {
 
-    private String username;
+    private String name;
     private String email;
     private String phone;
     private String avatar;
@@ -16,19 +16,19 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String phone, String avatar) {
-        this.username = username;
+    public User(String name, String email, String phone, String avatar) {
+        this.name = name;
         this.email = email;
         this.phone = phone;
         this.avatar = avatar;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {

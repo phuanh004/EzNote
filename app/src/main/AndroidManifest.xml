@@ -39,9 +39,10 @@
             android:name=".NoteManageActivity"
             android:label="@string/title_activity_note_manage"
             android:theme="@style/AppTheme" />
-        <activity android:name=".ProfileActivity"
-            android:theme="@style/AppTheme.HaveActionBar"
-            android:label="@string/title_activity_profile"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import net.phuanh004.eznote.Models.User;
 
+
 public class SignUpActivity extends AppCompatActivity {
     EditText etEmails,etPasss,etNames,etPhones;
     Button btnSignUp;
@@ -104,17 +105,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void SignUp(){
-        final String User = etEmails.getText().toString();
-        final String Pass = etPasss.getText().toString();
+        final String Email = etEmails.getText().toString();
+        String Pass = etPasss.getText().toString();
         final String Name = etNames.getText().toString();
         final String Phone = etPhones.getText().toString();
-        mAuth.createUserWithEmailAndPassword(User, Pass)
+        mAuth.createUserWithEmailAndPassword(Email, Pass)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mDatabase = FirebaseDatabase.getInstance().getReference();
-                            User mUser = new User(Name,User,Phone,"null");
+                            User mUser = new User(Name,Email,Phone,"null");
                             mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             if(user != null) {
@@ -126,7 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                                                    Intent intent = new Intent(SignUpActivity.this, ProfileActivity.class);
                                                     startActivity(intent);
                                                 }
                                             }
