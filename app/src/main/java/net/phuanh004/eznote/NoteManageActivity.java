@@ -24,7 +24,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -52,6 +54,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,21 +62,21 @@ import butterknife.ButterKnife;
 public class NoteManageActivity extends AppCompatActivity {
     @BindView(R.id.noteHeaderEditText) EditText noteHeaderEditText;
     @BindView(R.id.noteContentEditText) EditText noteContentEditText;
-
     @BindView(R.id.noteImagesRecyclerView) RecyclerView recyclerView;
-//    @BindView(R.id.imageOnMobRecyclerView) RecyclerView imageOnMobRecyclerView;
+    @BindView(R.id.noteImagesUploadProgressBar) ProgressBar noteImagesUploadProgressBar;
 
     private DatabaseReference mDatabase;
 
     private String currentuser;
     private String noteid;
 
-    private List<String> imageList;
-    private List<String> imageListOnMob;
+    private List<String> imageList = new ArrayList<>();
+    private List<String> imageUploadedList = new ArrayList<>();
     private HorizontalImageAdapter adapter;
     private File cameraFile = null;
+    private boolean isUploading = false;
 
-    private StorageReference storage;
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,15 +97,11 @@ public class NoteManageActivity extends AppCompatActivity {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         currentuser = firebaseAuth.getCurrentUser().getUid();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        storage = FirebaseStorage.getInstance().getReference();
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
 
-        imageList = new ArrayList<>();
-        imageListOnMob = new ArrayList<>();
-
-        adapter = new HorizontalImageAdapter(this, imageList);
+        adapter = new HorizontalImageAdapter(this, imageUploadedList);
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
@@ -123,13 +122,8 @@ public class NoteManageActivity extends AppCompatActivity {
             mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("images").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-//                    Log.d("^^^^^", "onChildAdded: " + dataSnapshot.getChildren().iterator().next());
-//                    Log.d("^^^^^", "onChildAdded: " +"s: "+ s);
-//                    Log.d("^^^^^", "onChildAdded: " +"d: "+ dataSnapshot.getValue());
-
-                    imageList.add((String) dataSnapshot.getValue());
-                    adapter.notifyItemChanged(imageList.size()-1);
+                    imageUploadedList.add((String) dataSnapshot.getValue());
+                    adapter.notifyItemChanged(imageUploadedList.size()-1);
                 }
 
                 @Override
@@ -161,8 +155,6 @@ public class NoteManageActivity extends AppCompatActivity {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                    noteHeaderEditText.setText( dataSnapshot.child("title").getValue().toString() );
-//                    noteContentEditText.setText( dataSnapshot.child("content").getValue().toString() );
                 }
 
                 @Override
@@ -184,13 +176,6 @@ public class NoteManageActivity extends AppCompatActivity {
         }
     }
 
-    void initData(){
-        imageList.add("https://s-media-cache-ak0.pinimg.com/236x/7c/1d/29/7c1d299817abd3ca3b2fc48dee9ea88f.jpg");
-        imageList.add("https://s-media-cache-ak0.pinimg.com/564x/f0/c4/13/f0c4139464c75eebbf8b7613f7e8aee3.jpg");
-        imageList.add("http://i.amz.mshcdn.com/UD-KASEmF9tLG5TaqmEQQL_LJrc=/fit-in/1200x9600/https%3A%2F%2Fblueprint-api-production.s3.amazonaws.com%2Fuploads%2Fcard%2Fimage%2F122081%2FS-Skype-logo.png");
-        imageList.add("https://cdn.colorlib.com/wp/wp-content/uploads/sites/2/2014/02/Olympic-logo.png");
-    }
-
     void showFileChooser(){
         final int REQUEST_CAMERA = 1;
         final int SELECT_FILE = 2;
@@ -201,53 +186,54 @@ public class NoteManageActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-
-                if (items[item].equals("Take Photo")) {
-                    int permissionCheck = ContextCompat.checkSelfPermission(NoteManageActivity.this, Manifest.permission.CAMERA);
-                    if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                        try {
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            File dir = new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp");
-                            if (!dir.exists()){
-                                dir.mkdirs();
-                            }
-                            cameraFile = File.createTempFile("img", ".jpg", new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp") );
-                            intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(NoteManageActivity.this, BuildConfig.APPLICATION_ID + ".provider", cameraFile));
-                            startActivityForResult(intent, REQUEST_CAMERA);
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
+            if (items[item].equals("Take Photo")) {
+                int permissionCheck = ContextCompat.checkSelfPermission(NoteManageActivity.this, Manifest.permission.CAMERA);
+                if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        File dir = new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp");
+                        if (!dir.exists()){
+                            dir.mkdirs();
                         }
-                    } else {
-                        ActivityCompat.requestPermissions(NoteManageActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
+                        cameraFile = File.createTempFile("img", ".png", new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp") );
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(NoteManageActivity.this, BuildConfig.APPLICATION_ID + ".provider", cameraFile));
+                        startActivityForResult(intent, REQUEST_CAMERA);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } else if (items[item].equals("Choose from Library")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
-                    dialog.dismiss();
+                } else {
+                    ActivityCompat.requestPermissions(NoteManageActivity.this, new String[]{Manifest.permission.CAMERA}, 1);
                 }
+            } else if (items[item].equals("Choose from Library")) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, SELECT_FILE);
+            } else if (items[item].equals("Cancel")) {
+                dialog.dismiss();
+            }
             }
         });
         builder.show();
     }
 
-    void uploadImage(final String key){
+    void uploadImage(){
+        if (!isUploading) {
+            String path = "noteImages/" + currentuser + "/" + UUID.randomUUID() + ".png";
 
-        for (int i=0; i<imageListOnMob.size(); i++) {
-            Uri file = Uri.fromFile(new File(imageListOnMob.get(i)));
+            StorageReference noteImagesRef = storage.getReference(path);
 
-            StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("image/jpeg")
-                    .build();
+            Uri file = Uri.fromFile(new File(imageList.get(0)));
 
-            UploadTask uploadTask = storage.child("noteImages/"+currentuser+"/"+noteid+"/"+file.getLastPathSegment()).putFile(file, metadata);
+            StorageMetadata metadata = new StorageMetadata.Builder().build();
 
-            final int finalI = i;
+            UploadTask uploadTask = noteImagesRef.putFile(file, metadata);
+            noteImagesUploadProgressBar.setVisibility(View.VISIBLE);
+
             uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
+                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    noteImagesUploadProgressBar.setProgress((int) progress);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -257,11 +243,10 @@ public class NoteManageActivity extends AppCompatActivity {
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(NoteManageActivity.this, "Upload Success", Toast.LENGTH_SHORT).show();
-                    imageListOnMob.remove(finalI);
-                    mDatabase.child("Users").child(currentuser).child("notes").child(key).child("images").push().setValue(taskSnapshot.getMetadata().getDownloadUrl().toString());
-//                    imageList.add(taskSnapshot.getMetadata().getDownloadUrl().toString());
-//                    adapter.notifyItemChanged(imageList.size()-1);
+                    noteImagesUploadProgressBar.setVisibility(View.INVISIBLE);
+                    imageList.remove(imageList.size() - 1);
+                    imageUploadedList.add(taskSnapshot.getMetadata().getDownloadUrl().toString());
+                    adapter.notifyItemChanged(imageUploadedList.size() - 1);
                 }
             });
         }
@@ -283,23 +268,6 @@ public class NoteManageActivity extends AppCompatActivity {
         }
     }
 
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_DCIM), "Camera");
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
-//        return image;
-//    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -307,29 +275,23 @@ public class NoteManageActivity extends AppCompatActivity {
         switch(requestCode) {
             case 1:
                 if(resultCode == RESULT_OK){
-//                    data.setClipData(ClipData.newRawUri(null,  selectedImage));
-//                    Log.d("~!@#$%", "onActivityResult: "+cameraFile.getPath());
-//                    Log.d("~!@#$%", "onActivityResult: "+cameraFile.getAbsolutePath());
-//                    Log.d("~!@#$%", "onActivityResult: "+cameraFile.getCanonicalPath());
-                    imageListOnMob.add(cameraFile.getPath());
-//                    adapter.notifyDataSetChanged();
+                    imageList.add(cameraFile.getPath());
                 }
 
                 break;
             case 2:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = data.getData();
-//                    Log.d("~!@#$%", "onActivityResult: "+selectedImage);
-                    imageListOnMob.add(getRealPathFromUri(NoteManageActivity.this, selectedImage));
-//                    adapter.notifyDataSetChanged();
+                    imageList.add(getRealPathFromUri(NoteManageActivity.this, selectedImage));
                 }
                 break;
         }
+
+        uploadImage();
     }
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
         Note note = new Note();
 
         Calendar cal = Calendar.getInstance();
@@ -351,21 +313,18 @@ public class NoteManageActivity extends AppCompatActivity {
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("title").setValue(note.getTitle());
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("content").setValue(note.getContent());
             }else {
-//                mDatabase.child("Users").child(currentuser).child("notes").push().setValue(note);
-
                 DatabaseReference notePush = mDatabase.child("Users").child(currentuser).child("notes").push();
                 notePush.setValue(note);
 
-                for (String img:imageListOnMob) {
-                    uploadImage(notePush.getKey());
-
-//                    mDatabase.child("Users").child(currentuser).child("notes").child(notePush.getKey()).child("images").push().setValue(img);
+                for (String img:imageUploadedList) {
+                    mDatabase.child("Users").child(currentuser).child("notes").child(notePush.getKey()).child("images").push().setValue(img);
                 }
 
             }
         } else {
             Toast.makeText(NoteManageActivity.this, "Can't save empty note",Toast.LENGTH_SHORT).show();
         }
+        this.finish();
     }
 
     @Override
@@ -377,12 +336,7 @@ public class NoteManageActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            if (imageListOnMob.size() == 0) {
-                onBackPressed();
-                this.finish();
-            }else {
-                return false;
-            }
+            onBackPressed();
         } else if (item.getItemId() == R.id.action_add_image){
             showFileChooser();
         }
