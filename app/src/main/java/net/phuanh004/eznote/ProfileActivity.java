@@ -32,7 +32,7 @@ public class ProfileActivity extends AppCompatActivity {
     public DatabaseReference mDatabase;
     public String currentuser;
     TextView tvName,tvEmail,tvPhone;
-    ImageView iveName,iveEmail,ivePhone;
+    ImageView iveName,iveEmail,ivePhone,ivavatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
