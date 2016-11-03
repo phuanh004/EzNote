@@ -117,6 +117,8 @@ public class SignUpActivity extends AppCompatActivity {
                             mDatabase = FirebaseDatabase.getInstance().getReference();
                             User mUser = new User(Name,Email,Phone,"null");
                             mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
+                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+                            startActivity(intent);
                         }else {
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
