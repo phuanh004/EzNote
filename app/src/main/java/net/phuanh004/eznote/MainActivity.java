@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity
 
     private TextView menuEmailTextView;
     private TextView menuDisplayNameTextView;
+    private ImageView menuAvatarImg;
 
     public String currentuser;
 
@@ -77,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         menuEmailTextView = (TextView) header.findViewById(R.id.menuEmailTextView);
         menuDisplayNameTextView = (TextView) header.findViewById(R.id.menuDisplayNameTextView);
+        menuAvatarImg = (ImageView) header.findViewById(R.id.menuAvatarImg);
 
         Fragment fragment = new AllNoteFragment();
         openFragment(fragment);
@@ -86,6 +89,14 @@ public class MainActivity extends AppCompatActivity
         currentuser = firebaseAuth.getCurrentUser().getUid();
         setAuthListener();
 
+
+        menuAvatarImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @OnClick(R.id.fab)
