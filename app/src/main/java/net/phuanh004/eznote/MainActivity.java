@@ -30,6 +30,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import net.phuanh004.eznote.Fragments.AllChatFragment;
 import net.phuanh004.eznote.Fragments.AllNoteFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,7 +40,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.fab) public FloatingActionButton addFloatingActionButton;
+//    @BindView(R.id.fab) public FloatingActionButton addFloatingActionButton;
 
     boolean doubleBackToExitPressedOnce = false;
     public NavigationView navigationView;
@@ -49,9 +52,9 @@ public class MainActivity extends AppCompatActivity
     private TextView menuEmailTextView;
     private TextView menuDisplayNameTextView;
 
-    private FragmentTransaction fragmentTransaction;
-
     public String currentuser;
+
+    public int currentFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,22 @@ public class MainActivity extends AppCompatActivity
         currentuser = firebaseAuth.getCurrentUser().getUid();
         setAuthListener();
 
+    }
+
+    @OnClick(R.id.fab)
+    public void addButtonClick(){
+        Intent intent = null;
+        switch (currentFragment){
+            case 1:
+                intent = new Intent(MainActivity.this, NoteManageActivity.class);
+                break;
+            case 2:
+                intent = new Intent(MainActivity.this, ChatActivity.class);
+                break;
+            default:
+                break;
+        }
+        startActivity(intent);
     }
 
     private void setAuthListener(){

@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         layoutEmail = (TextInputLayout) findViewById(R.id.layoutEmail);
 
         if(mAuth.getCurrentUser() != null){
-            Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
+            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
         }
 

@@ -16,7 +16,6 @@ import net.phuanh004.eznote.R;
  */
 public class AllChatFragment extends Fragment {
 
-
     public AllChatFragment() {
         // Required empty public constructor
     }
@@ -34,5 +33,7 @@ public class AllChatFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_chat);
+        ((MainActivity)getActivity()).currentFragment = 2;
+
     }
 }

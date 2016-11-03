@@ -72,16 +72,9 @@ public class AllNoteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_note);
+        ((MainActivity)getActivity()).currentFragment = 1;
 
         ButterKnife.bind(this, view);
-
-        ((MainActivity)getActivity()).addFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NoteManageActivity.class);
-                startActivity(intent);
-            }
-        });
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = ((MainActivity)getActivity()).currentuser;
