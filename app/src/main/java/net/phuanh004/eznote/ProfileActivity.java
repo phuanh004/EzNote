@@ -105,6 +105,8 @@ public class ProfileActivity extends AppCompatActivity {
                     tvEmail.setText(email);
                     tvPhone.setText(phone);
                     String avatar = map.get("avatar");
+                    new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
+                            .execute(avatar);
                     setSupportActionBar(toolbar);
                     getSupportActionBar().setTitle(name);
                 }
