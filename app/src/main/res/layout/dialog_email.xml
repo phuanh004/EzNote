@@ -12,7 +12,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_account_grey600_36dp"
+            android:src="@drawable/ic_email_grey600_36dp"
             />
 
         <TextView
