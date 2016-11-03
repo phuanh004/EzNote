@@ -2,6 +2,7 @@ package net.phuanh004.eznote.Fragments;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,6 +28,7 @@ import net.phuanh004.eznote.Adapter.NoteHolder;
 import net.phuanh004.eznote.Helper.RecyclerItemClickListener;
 import net.phuanh004.eznote.Models.Note;
 import net.phuanh004.eznote.MainActivity;
+import net.phuanh004.eznote.NoteManageActivity;
 import net.phuanh004.eznote.R;
 
 import java.text.DateFormat;
@@ -46,7 +48,6 @@ public class AllNoteFragment extends Fragment {
 
     @BindView(R.id.allNoteProgressBar) ProgressBar allNoteProgressBar;
     @BindView(R.id.allNoteRecyclerView) RecyclerView recyclerView;
-
     public DatabaseReference mDatabase;
 
     private List<String> listNoteKeys;
@@ -73,6 +74,14 @@ public class AllNoteFragment extends Fragment {
         ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_note);
 
         ButterKnife.bind(this, view);
+
+        ((MainActivity)getActivity()).addFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), NoteManageActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = ((MainActivity)getActivity()).currentuser;
@@ -113,8 +122,6 @@ public class AllNoteFragment extends Fragment {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 listNoteKeys.add(dataSnapshot.getKey());
-//                Log.d("^^^^", "onChildAdded: "+dataSnapshot);
-//                recyclerView.smoothScrollToPosition(listNoteKeys.size());
             }
 
             @Override
