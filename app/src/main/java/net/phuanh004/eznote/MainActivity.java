@@ -27,11 +27,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import net.phuanh004.eznote.Fragments.AllChatFragment;
 import net.phuanh004.eznote.Fragments.AllNoteFragment;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.fab) public FloatingActionButton addFloatingActionButton;
 
     boolean doubleBackToExitPressedOnce = false;
     public NavigationView navigationView;
@@ -43,6 +49,8 @@ public class MainActivity extends AppCompatActivity
     private TextView menuEmailTextView;
     private TextView menuDisplayNameTextView;
 
+    private FragmentTransaction fragmentTransaction;
+
     public String currentuser;
 
     @Override
@@ -52,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton addNoteBtn = (FloatingActionButton) findViewById(R.id.fab);
+        ButterKnife.bind(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -68,24 +76,12 @@ public class MainActivity extends AppCompatActivity
         menuDisplayNameTextView = (TextView) header.findViewById(R.id.menuDisplayNameTextView);
 
         Fragment fragment = new AllNoteFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
-        fragmentTransaction.replace(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
+        openFragment(fragment);
 
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = firebaseAuth.getCurrentUser().getUid();
         setAuthListener();
-
-        addNoteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NoteManageActivity.class);
-                startActivity(intent);
-            }
-        });
 
     }
 
@@ -105,6 +101,15 @@ public class MainActivity extends AppCompatActivity
         };
 
         firebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    private void openFragment(final Fragment fragment)   {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
     }
 
     @Override
@@ -158,6 +163,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment fragment;
+        if (!item.isChecked()) {
+            switch (id) {
+                case R.id.nav_chat:
+                    fragment = new AllChatFragment();
+                    openFragment(fragment);
+                    break;
+                case R.id.nav_note:
+                    fragment = new AllNoteFragment();
+                    openFragment(fragment);
+                    break;
+            }
+        }
 
         if (id == R.id.nav_log_out) {
             firebaseAuth.signOut();

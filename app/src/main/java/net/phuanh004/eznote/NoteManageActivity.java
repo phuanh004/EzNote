@@ -1,6 +1,5 @@
 package net.phuanh004.eznote;
 
-import android.*;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -21,7 +19,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,10 +45,8 @@ import net.phuanh004.eznote.Models.Note;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -184,6 +179,7 @@ public class NoteManageActivity extends AppCompatActivity {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
+            @SuppressWarnings("ResultOfMethodCallIgnored")
             @Override
             public void onClick(DialogInterface dialog, int item) {
             if (items[item].equals("Take Photo")) {
@@ -232,6 +228,7 @@ public class NoteManageActivity extends AppCompatActivity {
             uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                    isUploading = true;
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                     noteImagesUploadProgressBar.setProgress((int) progress);
                 }
@@ -239,16 +236,21 @@ public class NoteManageActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(NoteManageActivity.this, "Upload Failed", Toast.LENGTH_SHORT).show();
+                    isUploading = false;
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @SuppressWarnings("ConstantConditions")
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     noteImagesUploadProgressBar.setVisibility(View.INVISIBLE);
                     imageList.remove(imageList.size() - 1);
                     imageUploadedList.add(taskSnapshot.getMetadata().getDownloadUrl().toString());
                     adapter.notifyItemChanged(imageUploadedList.size() - 1);
+                    isUploading = false;
                 }
             });
+        }else {
+//            Todo: add toast when uploading
         }
     }
 
@@ -303,7 +305,7 @@ public class NoteManageActivity extends AppCompatActivity {
         note.setTimeZone(timeZone);
 
         if (!noteContentEditText.getText().toString().isEmpty()){
-            String title = "";
+            String title;
             title = !Objects.equals(noteHeaderEditText.getText().toString(), "") ? noteHeaderEditText.getText().toString() : getString(R.string.no_title);
 
             note.setTitle(title);
