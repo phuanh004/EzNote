@@ -20,6 +20,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -108,7 +109,7 @@ public class ProfileActivity extends AppCompatActivity {
                     new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
                             .execute(avatar);
                     setSupportActionBar(toolbar);
-                    getSupportActionBar().setTitle(name);
+                    getSupportActionBar().setTitle("Profile");
                 }
 
                 @Override
@@ -183,6 +184,9 @@ public class ProfileActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(ProfileActivity.this,"Name updated",Toast.LENGTH_SHORT).show();
+                                                Intent intent = getIntent();
+                                                finish();
+                                                startActivity(intent);
                                             }
                                         }
                                     });
@@ -337,9 +341,11 @@ public class ProfileActivity extends AppCompatActivity {
         final int REQUEST_CAMERA = 1;
         final int SELECT_FILE = 2;
 
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+        final CharSequence[] items = {"Take Photo", "Choose from Library"};
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Update Avatar");
+        builder.setIcon(R.drawable.ic_camera_black_36dp);
+        builder.setCancelable(true);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @SuppressWarnings("ResultOfMethodCallIgnored")
             @Override
@@ -521,6 +527,9 @@ public class ProfileActivity extends AppCompatActivity {
             bmImage.setImageBitmap(result);
         }
     }
+
+
+
 }
 
 

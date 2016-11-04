@@ -177,7 +177,8 @@ public class NoteManageActivity extends AppCompatActivity {
 
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Add Photo");
+        builder.setIcon(R.drawable.ic_camera_black_36dp);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @SuppressWarnings("ResultOfMethodCallIgnored")
             @Override
