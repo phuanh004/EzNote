@@ -26,7 +26,7 @@
                 android:id="@+id/ivavatar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/bg"
+                app:srcCompat="@color/colorAccent"
                 android:adjustViewBounds="false"
                 android:cropToPadding="false"
                 android:scaleType="centerCrop" />
