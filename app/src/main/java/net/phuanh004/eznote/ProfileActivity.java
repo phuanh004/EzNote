@@ -184,9 +184,6 @@ public class ProfileActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Toast.makeText(ProfileActivity.this,"Name updated",Toast.LENGTH_SHORT).show();
-                                                Intent intent = getIntent();
-                                                finish();
-                                                startActivity(intent);
                                             }
                                         }
                                     });

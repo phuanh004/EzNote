@@ -2,6 +2,9 @@ package net.phuanh004.eznote;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -15,6 +18,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,14 +29,19 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Fragments.AllChatFragment;
 import net.phuanh004.eznote.Fragments.AllNoteFragment;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,7 +130,20 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    menuDisplayNameTextView.setText(user.getDisplayName());
+                    mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Map<String,String> map = (Map)dataSnapshot.getValue();
+                            String name = map.get("name");
+                            menuDisplayNameTextView.setText(name);
+                            String avatar = map.get("avatar");
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                     menuEmailTextView.setText(user.getEmail());
                 } else {
                     currentuser = null;
@@ -215,5 +237,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
 }
