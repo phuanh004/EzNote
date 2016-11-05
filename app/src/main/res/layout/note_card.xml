@@ -30,7 +30,7 @@
             android:layout_width="296dp"
             android:layout_height="wrap_content"
             android:id="@+id/noteHeaderTv"
-            android:fontFamily="sans-serif-condensed"
+            android:fontFamily="serif"
             android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="normal|bold"
