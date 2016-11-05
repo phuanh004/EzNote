@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import net.phuanh004.eznote.Models.Chat;
+
 public class ChatActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
     public static final String TAG = "RecyclerViewDemo";
@@ -154,34 +156,6 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
         // Sending only allowed when signed in
         mSendButton.setEnabled(isSignedIn());
         mMessageEdit.setEnabled(isSignedIn());
-    }
-
-    public static class Chat {
-
-        String name;
-        String text;
-        String uid;
-
-        public Chat() {
-        }
-
-        public Chat(String name, String uid, String message) {
-            this.name = name;
-            this.text = message;
-            this.uid = uid;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getUid() {
-            return uid;
-        }
-
-        public String getText() {
-            return text;
-        }
     }
 
     public static class ChatHolder extends RecyclerView.ViewHolder {

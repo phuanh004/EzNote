@@ -67,12 +67,15 @@ public class NoteManageActivity extends AppCompatActivity {
 
     private List<String> imageList = new ArrayList<>();
     private List<String> imageUploadedList = new ArrayList<>();
+    private List<String> imageOnServerList = new ArrayList<>();
     private HorizontalImageAdapter adapter;
     private File cameraFile = null;
     private boolean isUploading = false;
+    private boolean isStopApp = false;
 
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,8 +120,15 @@ public class NoteManageActivity extends AppCompatActivity {
             mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("images").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    imageUploadedList.add((String) dataSnapshot.getValue());
-                    adapter.notifyItemChanged(imageUploadedList.size()-1);
+                    if (!isStopApp) {
+
+                        imageUploadedList.add((String) dataSnapshot.getValue());
+                        adapter.notifyItemChanged(imageUploadedList.size() - 1);
+                        if (noteid != null) {
+                            imageOnServerList.add((String) dataSnapshot.getValue());
+                        }
+
+                    }
                 }
 
                 @Override
@@ -214,6 +224,10 @@ public class NoteManageActivity extends AppCompatActivity {
     }
 
     void uploadImage(){
+//        if (noteid != null) {
+//            imageUploadedList.removeAll(imageOnServerList);
+//        }
+
         if (!isUploading) {
             String path = "noteImages/" + currentuser + "/" + UUID.randomUUID() + ".png";
 
@@ -279,6 +293,7 @@ public class NoteManageActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK){
                     imageList.add(cameraFile.getPath());
+                    uploadImage();
                 }
 
                 break;
@@ -286,11 +301,10 @@ public class NoteManageActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = data.getData();
                     imageList.add(getRealPathFromUri(NoteManageActivity.this, selectedImage));
+                    uploadImage();
                 }
                 break;
         }
-
-        uploadImage();
     }
 
     @Override
@@ -315,6 +329,15 @@ public class NoteManageActivity extends AppCompatActivity {
             if(noteid != null){
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("title").setValue(note.getTitle());
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("content").setValue(note.getContent());
+
+//                todo: send note and edit
+
+                imageUploadedList.removeAll(imageOnServerList);
+                isStopApp = true;
+
+                for (String img:imageUploadedList) {
+                    mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("images").push().setValue(img);
+                }
             }else {
                 DatabaseReference notePush = mDatabase.child("Users").child(currentuser).child("notes").push();
                 notePush.setValue(note);
