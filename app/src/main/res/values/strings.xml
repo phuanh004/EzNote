@@ -15,6 +15,22 @@
     <string name="nav_note">Note</string>
 
     <string name="no_title">No Title</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+
+    <string name="slide_1_title">Save your notes</string>
+    <string name="slide_1_desc">Capture what’s on your mind, add notes, lists, photos, and audio to EzNote</string>
+
+    <string name="slide_2_title">Work chat</string>
+    <string name="slide_2_desc">Chat with friends and your family share apture life’s little moments with them</string>
+
+    <string name="slide_3_title">Have it everywhere</string>
+    <string name="slide_3_desc">Capture a note once, and it’s instantly available on all your devices. Never worry about where you saved something because it’s in EzNote, and EzNote is wherever you are.</string>
+
+    <string name="slide_4_title">Share with anyone</string>
+    <string name="slide_4_desc">Share what matters with the people who matter to you. Capture life’s little moments and share them from wherever you happen to be</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

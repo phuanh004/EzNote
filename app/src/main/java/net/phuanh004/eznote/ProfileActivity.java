@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,6 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
     public String currentuser;
     TextView tvName,tvEmail,tvPhone;
     ImageView iveName,iveEmail,ivePhone,ivavatar,ivePass;
+    ProgressBar profileProgressBar;
     final Context c = this;
     private File cameraFile = null;
     private boolean isUploading = false;
@@ -94,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         ivePhone = (ImageView)findViewById(R.id.ivePhone);
         ivePass = (ImageView)findViewById(R.id.ivePass);
         ivavatar = (ImageView)findViewById(R.id.ivavatar);
+        profileProgressBar = (ProgressBar)findViewById(R.id.profileProgressBar);
         if(mAuth.getCurrentUser() != null){
             mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
                 @Override
@@ -110,6 +113,7 @@ public class ProfileActivity extends AppCompatActivity {
                             .execute(avatar);
                     setSupportActionBar(toolbar);
                     getSupportActionBar().setTitle("Profile");
+                    profileProgressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -338,11 +342,10 @@ public class ProfileActivity extends AppCompatActivity {
         final int REQUEST_CAMERA = 1;
         final int SELECT_FILE = 2;
 
-        final CharSequence[] items = {"Take Photo", "Choose from Library"};
+        final CharSequence[] items = {"Take Photo", "Choose from Library","Cancel"};
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Update Avatar");
         builder.setIcon(R.drawable.ic_camera_black_36dp);
-        builder.setCancelable(true);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @SuppressWarnings("ResultOfMethodCallIgnored")
             @Override
@@ -388,12 +391,15 @@ public class ProfileActivity extends AppCompatActivity {
             StorageMetadata metadata = new StorageMetadata.Builder().build();
 
             UploadTask uploadTask = noteImagesRef.putFile(file, metadata);
+            profileProgressBar.setVisibility(View.VISIBLE);
+
 
             uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     isUploading = true;
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                    profileProgressBar.setProgress((int) progress);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -405,7 +411,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @SuppressWarnings("ConstantConditions")
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                    profileProgressBar.setVisibility(View.INVISIBLE);
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     mDatabase.child("Users").child(currentuser).child("avatar").setValue(downloadUrl.toString());
