@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-                    mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
+                    mDatabase.child("Users").child(user.getUid().toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Map<String,String> map = (Map)dataSnapshot.getValue();

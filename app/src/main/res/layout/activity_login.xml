@@ -50,6 +50,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintHorizontal_bias="0.57"
         android:layout_marginTop="33dp"
+        app:errorTextAppearance="@style/MyErrorText"
         app:layout_constraintTop_toBottomOf="@+id/imgLogo"
         app:errorEnabled="true"
         >
@@ -73,6 +74,7 @@
         app:layout_constraintLeft_toLeftOf="@+id/layoutEmail"
         app:layout_constraintTop_toBottomOf="@+id/layoutEmail"
         app:layout_constraintHorizontal_bias="0.0"
+        app:errorTextAppearance="@style/MyErrorText"
         app:errorEnabled="true"
         >
 
