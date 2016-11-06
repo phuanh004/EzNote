@@ -66,7 +66,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
         mRef = FirebaseDatabase.getInstance().getReference();
         mUserChatRef = mRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("chats").child(receiverId);
 
-        mUserChatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserChatRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 //                dataSnapshot.getValue()
@@ -74,12 +74,13 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 if (dataSnapshot.getValue() == null){
                     DatabaseReference chatRef = mRef.child("Chat").push();
                     mUserChatRef.setValue(chatRef.getKey());
+                    mRef.child("Users").child(receiverId).child("chats").child(mAuth.getCurrentUser().getUid()).setValue(chatRef.getKey());
                     mChatRef = mRef.child("Chats").child(chatRef.getKey());
 
                 }else {
                     mChatRef = mRef.child("Chats").child(dataSnapshot.getValue().toString());
+                    attachRecyclerViewAdapter();
                 }
-                attachRecyclerViewAdapter();
             }
 
             @Override
