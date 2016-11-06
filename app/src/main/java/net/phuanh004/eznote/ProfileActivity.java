@@ -477,6 +477,7 @@ public class ProfileActivity extends AppCompatActivity {
             case 1:
                 if(resultCode == RESULT_OK){
                     imageList.add(cameraFile.getPath());
+                    uploadImage();
                 }
 
                 break;
@@ -484,11 +485,10 @@ public class ProfileActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = data.getData();
                     imageList.add(getRealPathFromUri(ProfileActivity.this, selectedImage));
+                    uploadImage();
                 }
                 break;
         }
-
-        uploadImage();
     }
 
     public static Bitmap getBitmapFromURL(String src) {
