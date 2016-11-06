@@ -40,7 +40,9 @@
                 android:layout_toRightOf="@id/ivName"
                 android:text="Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:textStyle="normal|bold"
+                android:fontFamily="sans-serif-condensed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -107,7 +109,9 @@
                 android:maxLines="1"
                 android:text="Email"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -173,7 +177,9 @@
                 android:maxLines="1"
                 android:text="Phone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -238,7 +244,9 @@
                 android:maxLines="1"
                 android:text="**********"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -21,7 +21,7 @@
     </style>
 
     <style name="MyErrorText" parent="TextAppearance.AppCompat.Small">
-        <item name="android:textColor">#FF4081</item>
+        <item name="android:textColor">#F44336</item>
     </style>
 
 
