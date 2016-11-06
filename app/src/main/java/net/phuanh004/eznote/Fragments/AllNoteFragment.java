@@ -50,7 +50,6 @@ public class AllNoteFragment extends Fragment {
     public DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter adapter;
 
-    private List<String> listNoteKeys;
     private String currentuser;
 
     private DateFormat simpleDateFormat;
@@ -109,41 +108,12 @@ public class AllNoteFragment extends Fragment {
             }
         }));
 
-        listNoteKeys = new ArrayList<>();
         setAdapter();
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 allNoteProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-        mDatabase.child("Users").child(currentuser).child("notes").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                listNoteKeys.add(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                listNoteKeys.remove(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
             }
 
             @Override
@@ -158,7 +128,6 @@ public class AllNoteFragment extends Fragment {
         adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
             @Override
             protected void populateViewHolder(NoteHolder viewHolder, Note model, int position) {
-//                simpleDateFormat = SimpleDateFormat.getTimeInstance();
                 simpleDateFormat = SimpleDateFormat.getDateInstance();
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
 
