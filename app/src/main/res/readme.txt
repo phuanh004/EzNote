@@ -1,5 +1,5 @@
 Thanks for visiting MaterialDesignIcons.com
 Check back often for new icons and follow @MaterialIcons for updates.
 
-Icon: check
-By: Google
+Icon: logout
+By: Austin Andrews
