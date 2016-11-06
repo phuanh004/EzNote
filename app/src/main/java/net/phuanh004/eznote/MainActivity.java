@@ -109,13 +109,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.fab)
-    public void addButtonClick(){
+    public void addButtonClick(FloatingActionButton fab){
         Intent intent = null;
         switch (currentFragment){
             case 1:
+                fab.setImageResource(R.drawable.add);
                 intent = new Intent(MainActivity.this, NoteManageActivity.class);
                 break;
             case 2:
+                fab.setImageResource(R.drawable.camera);
                 intent = new Intent(MainActivity.this, ChatActivity.class);
                 break;
             default:

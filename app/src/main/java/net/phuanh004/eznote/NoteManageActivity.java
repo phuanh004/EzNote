@@ -35,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
@@ -110,13 +111,13 @@ public class NoteManageActivity extends AppCompatActivity {
 
         if (noteBundle != null) {
             noteid = noteBundle.getString("id");
-            String noteTitle = noteBundle.getString("title");
-            String noteContent = noteBundle.getString("content");
-
-            getSupportActionBar().setTitle(noteTitle);
-
-            noteHeaderEditText.setText(noteTitle);
-            noteContentEditText.setText(noteContent);
+//            String noteTitle = noteBundle.getString("title");
+//            String noteContent = noteBundle.getString("content");
+//
+//            getSupportActionBar().setTitle(noteTitle);
+//
+//            noteHeaderEditText.setText(noteTitle);
+//            noteContentEditText.setText(noteContent);
 
             mDatabase.child("Users").child(currentuser).child("notes").child(noteid).child("images").addChildEventListener(new ChildEventListener() {
                 @Override
@@ -153,25 +154,13 @@ public class NoteManageActivity extends AppCompatActivity {
                 }
             });
 
-            mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addChildEventListener(new ChildEventListener() {
+            mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    getSupportActionBar().setTitle(dataSnapshot.child("title").getValue().toString());
 
-                }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                }
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    Toast.makeText(NoteManageActivity.this, "This note was removed", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                    noteHeaderEditText.setText(dataSnapshot.child("title").getValue().toString());
+                    noteContentEditText.setText(dataSnapshot.child("content").getValue().toString());
                 }
 
                 @Override
@@ -179,6 +168,36 @@ public class NoteManageActivity extends AppCompatActivity {
 
                 }
             });
+
+//            mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                    getSupportActionBar().setTitle(dataSnapshot.child("title").toString());
+//
+//                    noteHeaderEditText.setText(dataSnapshot.child("title").toString());
+//                    noteContentEditText.setText(dataSnapshot.child("content").toString());
+//                }
+//
+//                @Override
+//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                }
+//
+//                @Override
+//                public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                    Toast.makeText(NoteManageActivity.this, "This note was removed", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                }
+//
+//                @Override
+//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

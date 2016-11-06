@@ -3,18 +3,17 @@ package net.phuanh004.eznote.Fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.ChildEventListener;
@@ -26,8 +25,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Adapter.NoteHolder;
 import net.phuanh004.eznote.Helper.RecyclerItemClickListener;
-import net.phuanh004.eznote.Models.Note;
 import net.phuanh004.eznote.MainActivity;
+import net.phuanh004.eznote.Models.Note;
 import net.phuanh004.eznote.NoteManageActivity;
 import net.phuanh004.eznote.R;
 
@@ -49,8 +48,8 @@ public class AllNoteFragment extends Fragment {
     @BindView(R.id.allNoteProgressBar) ProgressBar allNoteProgressBar;
     @BindView(R.id.allNoteRecyclerView) RecyclerView recyclerView;
     public DatabaseReference mDatabase;
+    private FirebaseRecyclerAdapter adapter;
 
-    private List<String> listNoteKeys;
     private String currentuser;
 
     private DateFormat simpleDateFormat;
@@ -90,12 +89,25 @@ public class AllNoteFragment extends Fragment {
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener(){
 
             @Override
+            public void onItemClick(View view, int position) {
+                DatabaseReference thisNote = adapter.getRef(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", thisNote.getKey());
+//                bundle.putString("title", thisNote.child("title").toString());
+//                bundle.putString("content", thisNote.child("content").toString());
+
+                Intent intent = new Intent(getActivity(), NoteManageActivity.class);
+                intent.putExtra("note",bundle);
+                getActivity().startActivity(intent);
+            }
+
+            @Override
             public void onLongItemClick(View view, int position) {
-                showDeleteDialog(listNoteKeys.get(position));
+                showDeleteDialog(adapter.getRef(position).getKey());
+//                Toast.makeText(getActivity(), adapter.getRef(position).getKey(), Toast.LENGTH_LONG).show();
             }
         }));
 
-        listNoteKeys = new ArrayList<>();
         setAdapter();
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,42 +121,13 @@ public class AllNoteFragment extends Fragment {
 
             }
         });
-
-
-        mDatabase.child("Users").child(currentuser).child("notes").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                listNoteKeys.add(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                listNoteKeys.remove(dataSnapshot.getKey());
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
     private void setAdapter(){
 
-        FirebaseRecyclerAdapter adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
+        adapter = new FirebaseRecyclerAdapter<Note, NoteHolder>(Note.class, R.layout.note_card, NoteHolder.class, mDatabase.child("Users").child(currentuser).child("notes")) {
             @Override
             protected void populateViewHolder(NoteHolder viewHolder, Note model, int position) {
-//                simpleDateFormat = SimpleDateFormat.getTimeInstance();
                 simpleDateFormat = SimpleDateFormat.getDateInstance();
                 simpleDateFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
 
@@ -156,13 +139,15 @@ public class AllNoteFragment extends Fragment {
                 if (model.getImages() != null) {
                     viewHolder.setImage(model.getImages().entrySet().iterator().next().getValue());
                 }
-                viewHolder.addEditNoteCardClick(getActivity(), listNoteKeys.get(position), model);
+
+
+//                viewHolder.addEditNoteCardClick(getActivity(),  adapter.getRef(position), model);
             }
         };
         recyclerView.setAdapter(adapter);
     }
 
-    public void showDeleteDialog(final String id) {
+    private void showDeleteDialog(final String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setMessage(getString(R.string.dialog_message_delete));
