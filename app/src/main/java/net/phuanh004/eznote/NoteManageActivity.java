@@ -171,13 +171,6 @@ public class NoteManageActivity extends AppCompatActivity {
             });
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     void showFileChooser(){

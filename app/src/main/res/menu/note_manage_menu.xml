@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"  >
 
+    <item android:title="Add Audio"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_microphone_white_24dp"
+        android:id="@+id/action_add_audio" />
     <item android:title="Add Image"
         app:showAsAction="always"
-        android:icon="@drawable/ic_add_image"
+        android:icon="@drawable/ic_image_white_24dp"
         android:id="@+id/action_add_image" />
+
 </menu>

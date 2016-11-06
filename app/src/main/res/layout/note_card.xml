@@ -37,8 +37,9 @@
             android:textSize="20sp"
             android:textColor="?android:attr/textColorPrimary"
             android:textStyle="normal|bold"
-            tools:layout_editor_absoluteY="31dp"
+            tools:layout_editor_absoluteY="56dp"
             android:maxLines="1"
+            android:maxLength="24"
             tools:layout_editor_absoluteX="15dp" />
 
         <TextView
