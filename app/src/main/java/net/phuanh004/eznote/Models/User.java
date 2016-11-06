@@ -12,6 +12,7 @@ public class User {
     private String email;
     private String phone;
     private String avatar;
+    private String userId;
 
     public User() {
     }
@@ -21,6 +22,14 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.avatar = avatar;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {

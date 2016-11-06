@@ -22,12 +22,16 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Models.Chat;
+
+import java.util.UUID;
 
 public class ChatActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
@@ -36,6 +40,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
     private DatabaseReference mChatRef;
+    private DatabaseReference mUserChatRef;
     private Button mSendButton;
     private EditText mMessageEdit;
 
@@ -43,10 +48,14 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
     private LinearLayoutManager mManager;
     private FirebaseRecyclerAdapter<Chat, ChatHolder> mRecyclerViewAdapter;
 
+    private String chatId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        final String receiverId = getIntent().getStringExtra("id");
 
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(this);
@@ -55,25 +64,49 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
         mMessageEdit = (EditText) findViewById(R.id.messageEdit);
 
         mRef = FirebaseDatabase.getInstance().getReference();
-        mChatRef = mRef.child("Chats");
+        mUserChatRef = mRef.child("Users").child(mAuth.getCurrentUser().getUid()).child("chats").child(receiverId);
+
+        mUserChatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+//                dataSnapshot.getValue()
+//                Log.d(TAG, "onDataChange: "+dataSnapshot.getValue());
+                if (dataSnapshot.getValue() == null){
+                    DatabaseReference chatRef = mRef.child("Chat").push();
+                    mUserChatRef.setValue(chatRef.getKey());
+                    mChatRef = mRef.child("Chats").child(chatRef.getKey());
+
+                }else {
+                    mChatRef = mRef.child("Chats").child(dataSnapshot.getValue().toString());
+                }
+                attachRecyclerViewAdapter();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uid = mAuth.getCurrentUser().getUid();
-                String name = "User " + uid.substring(0, 6);
+                if (mMessageEdit.getText().toString() != "") {
+                    String uid = mAuth.getCurrentUser().getUid();
+                    String name = "User " + uid.substring(0, 6);
 
-                Chat chat = new Chat(name, uid, mMessageEdit.getText().toString());
-                mChatRef.push().setValue(chat, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference reference) {
-                        if (databaseError != null) {
-                            Log.e(TAG, "Failed to write message", databaseError.toException());
+                    Chat chat = new Chat(name, uid, mMessageEdit.getText().toString());
+                    mChatRef.push().setValue(chat, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference reference) {
+                            if (databaseError != null) {
+                                Log.e(TAG, "Failed to write message", databaseError.toException());
+                            }
                         }
-                    }
-                });
+                    });
 
-                mMessageEdit.setText("");
+                    mMessageEdit.setText("");
+                }
             }
         });
 
@@ -84,17 +117,6 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
         mMessages.setHasFixedSize(false);
         mMessages.setLayoutManager(mManager);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Default Database rules do not allow unauthenticated reads, so we need to
-        // sign in before attaching the RecyclerView adapter otherwise the Adapter will
-        // not be able to read any data from the Database.
-
-        attachRecyclerViewAdapter();
     }
 
     @Override

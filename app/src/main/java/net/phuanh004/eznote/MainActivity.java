@@ -37,13 +37,14 @@ import net.phuanh004.eznote.Helper.CircleTransform;
 
 import java.util.Map;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-//    @BindView(R.id.fab) public FloatingActionButton addFloatingActionButton;
+    @BindView(R.id.fab) public FloatingActionButton fab;
 
     boolean doubleBackToExitPressedOnce = false;
     public NavigationView navigationView;
@@ -101,16 +102,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.fab)
-    public void addButtonClick(FloatingActionButton fab){
+    public void addButtonClick(){
         Intent intent = null;
         switch (currentFragment){
             case 1:
-//                fab.setImageResource(R.drawable.add);
                 intent = new Intent(MainActivity.this, NoteManageActivity.class);
                 break;
             case 2:
-//                fab.setImageResource(R.drawable.camera);
-                intent = new Intent(MainActivity.this, ChatActivity.class);
+                intent = new Intent(MainActivity.this, FriendsActivity.class);
                 break;
             default:
                 break;
@@ -127,16 +126,11 @@ public class MainActivity extends AppCompatActivity
                     mDatabase.child("Users").child(user.getUid().toString()).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-//                            Map<String,String> map = (Map)dataSnapshot.getValue();
-//                            String name = map.get("name");
-//                            menuDisplayNameTextView.setText(name);
-//                            String avatar = map.get("avatar");
                             menuDisplayNameTextView.setText(dataSnapshot.child("name").getValue().toString());
 //                            Glide.with(MainActivity.this)
 //                                    .load(dataSnapshot.child("avatar").getValue().toString())
 //                                    .transform(new CircleTransform(MainActivity.this))
 //                                    .into(menuAvatarImg);
-//                            menuDisplayNameTextView.setText(dataSnapshot.child("avatar").getValue().toString());
                         }
 
                         @Override
@@ -218,12 +212,14 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment;
         if (!item.isChecked()) {
             switch (id) {
-                case R.id.nav_chat:
-                    fragment = new AllChatFragment();
+                case R.id.nav_note:
+                    fab.setImageResource(R.drawable.add);
+                    fragment = new AllNoteFragment();
                     openFragment(fragment);
                     break;
-                case R.id.nav_note:
-                    fragment = new AllNoteFragment();
+                case R.id.nav_chat:
+                    fab.setImageResource(R.drawable.ic_find_friend);
+                    fragment = new AllChatFragment();
                     openFragment(fragment);
                     break;
             }

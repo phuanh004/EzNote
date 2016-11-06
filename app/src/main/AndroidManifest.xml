@@ -50,7 +50,7 @@
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme" />
         <activity android:name=".ChatActivity" />
-        <activity android:name=".SearchableActivity"></activity>
+        <activity android:name=".FriendsActivity"></activity>
     </application>
 
 </manifest>
