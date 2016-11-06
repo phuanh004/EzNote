@@ -34,11 +34,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
-            android:theme="@style/AppTheme.Custom"/>
+        <activity
+            android:name=".LoginActivity"
+            android:theme="@style/AppTheme.Custom" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".SignUpActivity"
-            android:theme="@style/AppTheme.Custom"/>
+        <activity
+            android:name=".SignUpActivity"
+            android:theme="@style/AppTheme.Custom" />
         <activity
             android:name=".NoteManageActivity"
             android:label="@string/title_activity_note_manage"
@@ -48,6 +50,7 @@
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme" />
         <activity android:name=".ChatActivity" />
+        <activity android:name=".SearchableActivity"></activity>
     </application>
 
 </manifest>

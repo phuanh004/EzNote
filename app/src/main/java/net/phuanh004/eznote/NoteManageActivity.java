@@ -167,36 +167,6 @@ public class NoteManageActivity extends AppCompatActivity {
 
                 }
             });
-
-//            mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    getSupportActionBar().setTitle(dataSnapshot.child("title").toString());
-//
-//                    noteHeaderEditText.setText(dataSnapshot.child("title").toString());
-//                    noteContentEditText.setText(dataSnapshot.child("content").toString());
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                    Toast.makeText(NoteManageActivity.this, "This note was removed", Toast.LENGTH_SHORT).show();
-//                    finish();
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
         }
     }
 
