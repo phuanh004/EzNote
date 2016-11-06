@@ -88,6 +88,7 @@ public class NoteManageActivity extends AppCompatActivity {
         if (getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_check_white_24dp);
         }
 
         ButterKnife.bind(this);
@@ -107,7 +108,7 @@ public class NoteManageActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        getSupportActionBar().setTitle(R.string.no_title);
+        getSupportActionBar().setTitle("");
 
         if (noteBundle != null) {
             noteid = noteBundle.getString("id");
@@ -157,7 +158,6 @@ public class NoteManageActivity extends AppCompatActivity {
             mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    getSupportActionBar().setTitle(dataSnapshot.child("title").getValue().toString());
 
                     noteHeaderEditText.setText(dataSnapshot.child("title").getValue().toString());
                     noteContentEditText.setText(dataSnapshot.child("content").getValue().toString());
@@ -170,13 +170,6 @@ public class NoteManageActivity extends AppCompatActivity {
             });
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     void showFileChooser(){

@@ -1,6 +1,5 @@
 package net.phuanh004.eznote;
 
-import android.*;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +17,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.content.IntentCompat;
@@ -26,6 +26,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -112,7 +113,8 @@ public class ProfileActivity extends AppCompatActivity {
                     new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
                             .execute(avatar);
                     setSupportActionBar(toolbar);
-                    getSupportActionBar().setTitle("Profile");
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                    getSupportActionBar().setTitle("");
                     profileProgressBar.setVisibility(View.INVISIBLE);
                 }
 
@@ -175,7 +177,6 @@ public class ProfileActivity extends AppCompatActivity {
                         if (updateName.getText().toString().equals("")) {
                             Toast.makeText(ProfileActivity.this,"Name can't be blank",Toast.LENGTH_SHORT).show();
                         }else{
-                            mDatabase.child("Users").child(currentuser).child("name").setValue(updateName.getText().toString());
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -187,6 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                mDatabase.child("Users").child(currentuser).child("name").setValue(updateName.getText().toString());
                                                 Toast.makeText(ProfileActivity.this,"Name updated",Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -222,13 +224,13 @@ public class ProfileActivity extends AppCompatActivity {
                         }else if (!isValidEmailAddress(updateEmail.getText().toString())){
                             Toast.makeText(ProfileActivity.this,"Email is vaild",Toast.LENGTH_SHORT).show();
                         }else{
-                            mDatabase.child("Users").child(currentuser).child("email").setValue(updateEmail.getText().toString());
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             user.updateEmail(updateEmail.getText().toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                mDatabase.child("Users").child(currentuser).child("email").setValue(updateEmail.getText().toString());
                                                 Toast.makeText(ProfileActivity.this,"User email address updated",Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -530,9 +532,19 @@ public class ProfileActivity extends AppCompatActivity {
             bmImage.setImageBitmap(result);
         }
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 }
+
 
 

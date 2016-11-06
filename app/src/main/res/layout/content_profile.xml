@@ -40,7 +40,8 @@
                 android:layout_toRightOf="@id/ivName"
                 android:text="Name"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +75,7 @@
         <View xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#009688"
+            android:background="#727272"
             android:layout_marginLeft="80dp" />
 
         <RelativeLayout
@@ -107,7 +108,8 @@
                 android:maxLines="1"
                 android:text="Email"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -140,7 +142,7 @@
         <View xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#009688"
+            android:background="#727272"
             android:layout_marginLeft="80dp" />
 
         <RelativeLayout
@@ -173,7 +175,8 @@
                 android:maxLines="1"
                 android:text="Phone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -205,7 +208,7 @@
         <View xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#009688"
+            android:background="#727272"
             android:layout_marginLeft="80dp" />
 
         <RelativeLayout
@@ -238,7 +241,8 @@
                 android:maxLines="1"
                 android:text="**********"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:fontFamily="sans-serif-condensed" />
 
             <TextView
                 android:layout_width="wrap_content"

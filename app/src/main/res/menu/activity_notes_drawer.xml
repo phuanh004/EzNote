@@ -9,12 +9,12 @@
 
         <item
             android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_chat"
+            android:icon="@drawable/ic_comment_multiple_outline_white_36dp"
             android:title="@string/nav_work_chat" />
 
         <item
             android:id="@+id/nav_log_out"
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/ic_logout_white_36dp"
             android:title="@string/nav_logout" />
         <!--<item-->
             <!--android:id="@+id/nav_gallery"-->
