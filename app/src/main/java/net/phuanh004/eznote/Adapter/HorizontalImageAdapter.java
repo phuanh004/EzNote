@@ -47,15 +47,6 @@ public class HorizontalImageAdapter extends RecyclerView.Adapter<HorizontalImage
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         Glide.with(mContext).load(imageList.get(position)).override(200,200).centerCrop().into(holder.img);
-//        holder.title.setText(album.getName());
-
-//
-//        holder.overflow.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showPopupMenu(holder.overflow);
-//            }
-//        });
     }
 
     @Override
