@@ -4,23 +4,41 @@ package net.phuanh004.eznote.Fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import net.phuanh004.eznote.Adapter.ChatHolder;
+import net.phuanh004.eznote.Adapter.NoteHolder;
+import net.phuanh004.eznote.FriendsActivity;
 import net.phuanh004.eznote.MainActivity;
+import net.phuanh004.eznote.Models.Conversation;
 import net.phuanh004.eznote.R;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class AllChatFragment extends Fragment {
+    @BindView(R.id.allChatProgressBar) ProgressBar allNoteProgressBar;
+    @BindView(R.id.allChatRecyclerView) RecyclerView recyclerView;
+    public DatabaseReference mDatabase;
+    private FirebaseRecyclerAdapter adapter;
+    private String currentuser;
 
     public AllChatFragment() {
         // Required empty public constructor
@@ -43,27 +61,42 @@ public class AllChatFragment extends Fragment {
         ((MainActivity)getActivity()).navigationView.setCheckedItem(R.id.nav_chat);
         ((MainActivity)getActivity()).currentFragment = 2;
 
+        ButterKnife.bind(this, view);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        currentuser = ((MainActivity)getActivity()).currentuser;
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                allNoteProgressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+        setAdapter();
     }
 
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-//        menu.clear();
-//        inflater.inflate(R.menu.menu_all_chat, menu);
-//
-//        MenuItem searchItem = menu.findItem(R.id.search);
-//        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//        searchView.setOnQueryTextListener(this);
-//    }
-//
-//    @Override
-//    public boolean onQueryTextSubmit(String query) {
-//        Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextChange(String newText) {
-//        return false;
-//    }
+    private void setAdapter(){
+
+        adapter = new FirebaseRecyclerAdapter<Conversation, ChatHolder>(Conversation.class, R.layout.card_chat, ChatHolder.class, mDatabase.child("Users").child(currentuser).child("chats")) {
+            @Override
+            protected void populateViewHolder(ChatHolder viewHolder, Conversation model, int position) {
+                viewHolder.setName(model.getSender());
+                viewHolder.setAvatar(model.getAvatar());
+                viewHolder.setLastMessage(model.getLastMessage());
+                viewHolder.setClickListener(model.getSenderId());
+            }
+        };
+        recyclerView.setAdapter(adapter);
+    }
 }
