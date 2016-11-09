@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etEmail,etPass;
     Button btnLogin;
     TextInputLayout layoutPass,layoutEmail;
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +34,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvSignUp = (TextView) findViewById(R.id.tvSignUp);
         etEmail = (EditText) findViewById(R.id.etEmail);
         etPass = (EditText) findViewById(R.id.etPass);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         layoutPass = (TextInputLayout) findViewById(R.id.layoutPass);
         layoutEmail = (TextInputLayout) findViewById(R.id.layoutEmail);
-
+        progressBar.setVisibility(View.VISIBLE);
         if(mAuth.getCurrentUser() != null){
             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
@@ -68,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(isValidEmailAddress(User) && Pass.length() >=6 ){
                     layoutEmail.setError(null);
                     layoutPass.setError(null);
+                    progressBar.setVisibility(View.VISIBLE);
                     Login();
                 }
             }
@@ -93,6 +97,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void Login() {
+        tvSignUp.setVisibility(View.INVISIBLE);
+        etEmail.setVisibility(View.INVISIBLE);
+        etPass.setVisibility(View.INVISIBLE);
+        btnLogin.setVisibility(View.INVISIBLE);
+        layoutPass.setVisibility(View.INVISIBLE);
+        layoutEmail.setVisibility(View.INVISIBLE);
         String User = etEmail.getText().toString();
         String Pass = etPass.getText().toString();
         mAuth.signInWithEmailAndPassword(User, Pass)
@@ -103,6 +113,13 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                         }else {
+                            tvSignUp.setVisibility(View.VISIBLE);
+                            etEmail.setVisibility(View.VISIBLE);
+                            etPass.setVisibility(View.VISIBLE);
+                            btnLogin.setVisibility(View.VISIBLE);
+                            layoutPass.setVisibility(View.VISIBLE);
+                            layoutEmail.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.INVISIBLE);
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                             NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
