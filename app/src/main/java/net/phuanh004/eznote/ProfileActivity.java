@@ -174,6 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
+                        profileProgressBar.setVisibility(View.VISIBLE);
                         if (updateName.getText().toString().equals("")) {
                             Toast.makeText(ProfileActivity.this,"Name can't be blank",Toast.LENGTH_SHORT).show();
                         }else{
@@ -188,6 +189,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                profileProgressBar.setVisibility(View.INVISIBLE);
                                                 mDatabase.child("Users").child(currentuser).child("name").setValue(updateName.getText().toString());
                                                 Toast.makeText(ProfileActivity.this,"Name updated",Toast.LENGTH_SHORT).show();
                                             }
@@ -219,6 +221,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
+                        profileProgressBar.setVisibility(View.VISIBLE);
                         if (updateEmail.getText().toString().equals("")) {
                             Toast.makeText(ProfileActivity.this,"Email can't be blank",Toast.LENGTH_SHORT).show();
                         }else if (!isValidEmailAddress(updateEmail.getText().toString())){
@@ -230,6 +233,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                profileProgressBar.setVisibility(View.INVISIBLE);
                                                 mDatabase.child("Users").child(currentuser).child("email").setValue(updateEmail.getText().toString());
                                                 Toast.makeText(ProfileActivity.this,"User email address updated",Toast.LENGTH_SHORT).show();
                                             }
@@ -264,9 +268,11 @@ public class ProfileActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
+                        profileProgressBar.setVisibility(View.VISIBLE);
                         if (updatePhone.getText().toString().equals("")) {
                             Toast.makeText(ProfileActivity.this,"Phone can't be blank",Toast.LENGTH_SHORT).show();
                         }else{
+                            profileProgressBar.setVisibility(View.INVISIBLE);
                             mDatabase.child("Users").child(currentuser).child("phone").setValue(updatePhone.getText().toString());
                             Toast.makeText(ProfileActivity.this,"Phone updated",Toast.LENGTH_SHORT).show();
                         }
@@ -298,9 +304,12 @@ public class ProfileActivity extends AppCompatActivity {
                 .setCancelable(true)
                 .setPositiveButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
+                        profileProgressBar.setVisibility(View.VISIBLE);
                         if (updatePass.getText().toString().equals("")) {
+                            profileProgressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(ProfileActivity.this,"Pass can't be blank",Toast.LENGTH_SHORT).show();
                         }else if (updatePass.getText().toString().length()<6){
+                            profileProgressBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(ProfileActivity.this,"Password must be of minimum 6 characters",Toast.LENGTH_SHORT).show();
                         }else{
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -309,6 +318,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
+                                                profileProgressBar.setVisibility(View.INVISIBLE);
                                                 Toast.makeText(ProfileActivity.this,"User password updated",Toast.LENGTH_SHORT).show();
                                             }
                                         }
@@ -401,7 +411,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     isUploading = true;
                     double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    profileProgressBar.setProgress((int) progress);
+                    profileProgressBar.setVisibility(View.VISIBLE);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -413,7 +423,6 @@ public class ProfileActivity extends AppCompatActivity {
                 @SuppressWarnings("ConstantConditions")
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    profileProgressBar.setVisibility(View.INVISIBLE);
                     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     mDatabase.child("Users").child(currentuser).child("avatar").setValue(downloadUrl.toString());
@@ -433,6 +442,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 String avatar = map.get("avatar");
                                                 new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
                                                         .execute(avatar);
+                                                profileProgressBar.setVisibility(View.INVISIBLE);
 
                                             }
 

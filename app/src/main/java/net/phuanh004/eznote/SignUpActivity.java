@@ -114,11 +114,26 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            mDatabase = FirebaseDatabase.getInstance().getReference();
-                            User mUser = new User(Name,Email,Phone,"null");
-                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
-                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
-                            startActivity(intent);
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(etNames.getText().toString())
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                mDatabase = FirebaseDatabase.getInstance().getReference();
+                                                User mUser = new User(Name,Email,Phone,"");
+                                                mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
+                                                Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+                                                startActivity(intent);
+                                            }
+                                        }
+                                    });
                         }else {
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
