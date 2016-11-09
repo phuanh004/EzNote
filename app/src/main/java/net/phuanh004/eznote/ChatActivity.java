@@ -30,7 +30,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Models.Chat;
+import net.phuanh004.eznote.Models.Conversation;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 public class ChatActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
@@ -48,7 +50,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
     private LinearLayoutManager mManager;
     private FirebaseRecyclerAdapter<Chat, ChatHolder> mRecyclerViewAdapter;
 
-    private String chatId;
+    private String roomId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +75,13 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
 //                Log.d(TAG, "onDataChange: "+dataSnapshot.getValue());
                 if (dataSnapshot.getValue() == null){
                     DatabaseReference chatRef = mRef.child("Chat").push();
-                    mUserChatRef.setValue(chatRef.getKey());
-                    mRef.child("Users").child(receiverId).child("chats").child(mAuth.getCurrentUser().getUid()).setValue(chatRef.getKey());
+                    mUserChatRef.child("room").setValue(chatRef.getKey());
+                    roomId = chatRef.getKey();
+                    mRef.child("Users").child(receiverId).child("chats").child(mAuth.getCurrentUser().getUid()).child("room").setValue(chatRef.getKey());
                     mChatRef = mRef.child("Chats").child(chatRef.getKey());
 
                 }else {
-                    mChatRef = mRef.child("Chats").child(dataSnapshot.getValue().toString());
+                    mChatRef = mRef.child("Chats").child(dataSnapshot.child("room").getValue().toString());
                     attachRecyclerViewAdapter();
                 }
             }
@@ -93,20 +96,52 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
             @Override
             public void onClick(View v) {
                 if (mMessageEdit.getText().toString() != "") {
-                    String uid = mAuth.getCurrentUser().getUid();
-                    String name = "User " + uid.substring(0, 6);
+                    final String uid = mAuth.getCurrentUser().getUid();
 
-                    Chat chat = new Chat(name, uid, mMessageEdit.getText().toString());
-                    mChatRef.push().setValue(chat, new DatabaseReference.CompletionListener() {
+                    mRef.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference reference) {
-                            if (databaseError != null) {
-                                Log.e(TAG, "Failed to write message", databaseError.toException());
-                            }
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Calendar cal = Calendar.getInstance();
+                            String timeZone = cal.getTimeZone().getID();
+                            long currentTime = cal.getTimeInMillis() / 1000L;
+
+                            Chat chat = new Chat(dataSnapshot.child("name").getValue().toString(), uid, mMessageEdit.getText().toString());
+                            Conversation conversation = new Conversation();
+
+                            conversation.setAvatar(dataSnapshot.child("avatar").getValue().toString());
+                            conversation.setSender(dataSnapshot.child("name").getValue().toString());
+                            conversation.setRoom(dataSnapshot.child("chats").child(receiverId).child("room").getValue().toString());
+                            conversation.setSenderId(uid);
+                            conversation.setLastMessage(mMessageEdit.getText().toString());
+                            conversation.setTimeZone(timeZone);
+                            conversation.setSendedTime(currentTime);
+
+                            mRef.child("Users").child(receiverId).child("chats").child(uid).setValue(conversation);
+
+                            conversation.setAvatar(dataSnapshot.child("avatar").getValue().toString());
+                            conversation.setSender(dataSnapshot.child("name").getValue().toString());
+                            conversation.setSenderId(receiverId);
+
+                            mRef.child("Users").child(uid).child("chats").child(receiverId).setValue(conversation);
+
+//                            Log.d(TAG, "onDataChange: "+dataSnapshot );
+                            mChatRef.push().setValue(chat, new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError databaseError, DatabaseReference reference) {
+                                    if (databaseError != null) {
+                                        Log.e(TAG, "Failed to write message", databaseError.toException());
+                                    }
+                                }
+                            });
+
+                            mMessageEdit.setText("");
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
                         }
                     });
-
-                    mMessageEdit.setText("");
                 }
             }
         });

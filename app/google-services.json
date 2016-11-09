@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "465645994500-pjmm8asbprb7cpfeciupnkgndmgvlc30.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.phuanh004.eznote",
+            "certificate_hash": "1F068B91A3B0483693D71B052EF7B9C3AD6F8F47"
+          }
+        },
+        {
           "client_id": "465645994500-scjqd55mu2rf38bgkb6vksrnou44k540.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

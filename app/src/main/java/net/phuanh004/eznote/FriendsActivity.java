@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -140,7 +141,19 @@ public class FriendsActivity extends AppCompatActivity implements SearchView.OnQ
         return true;
     }
 
-//    private static List<User> filter(List<User> models, String query) {
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    //    private static List<User> filter(List<User> models, String query) {
 //        final String lowerCaseQuery = query.toLowerCase();
 //
 //        final List<User> filteredModelList = new ArrayList<>();
