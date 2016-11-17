@@ -2,6 +2,9 @@ package net.phuanh004.eznote;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -35,6 +38,8 @@ import net.phuanh004.eznote.Fragments.AllChatFragment;
 import net.phuanh004.eznote.Fragments.AllNoteFragment;
 import net.phuanh004.eznote.Helper.CircleTransform;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -127,6 +132,11 @@ public class MainActivity extends AppCompatActivity
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             menuDisplayNameTextView.setText(dataSnapshot.child("name").getValue().toString());
+                            Map<String, String> map = (Map) dataSnapshot.getValue();
+                            String avatar = map.get("avatar");
+                            if(avatar != null){
+                                new MainActivity.DownLoadImageTask(menuAvatarImg).execute(avatar);
+                            }
 //                            Glide.with(MainActivity.this)
 //                                    .load(dataSnapshot.child("avatar").getValue().toString())
 //                                    .transform(new CircleTransform(MainActivity.this))
@@ -227,9 +237,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_log_out) {
             firebaseAuth.signOut();
-        }else if (id == R.id.nav_about_us){
-            Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
-            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -237,11 +244,40 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void setActionBarTitle(String title){
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(title);
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap> {
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result){
+            imageView.setImageBitmap(result);
         }
     }
-
 
 }

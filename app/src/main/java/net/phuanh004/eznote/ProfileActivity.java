@@ -72,8 +72,8 @@ public class ProfileActivity extends AppCompatActivity {
     public FirebaseAuth mAuth;
     public DatabaseReference mDatabase;
     public String currentuser;
-    TextView tvName,tvEmail,tvPhone;
-    ImageView iveName,iveEmail,ivePhone,ivavatar,ivePass;
+    TextView tvName, tvEmail, tvPhone;
+    ImageView iveName, iveEmail, ivePhone, ivavatar, ivePass;
     ProgressBar profileProgressBar;
     final Context c = this;
     private File cameraFile = null;
@@ -89,20 +89,20 @@ public class ProfileActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentuser = mAuth.getCurrentUser().getUid();
-        tvName = (TextView)findViewById(R.id.tvName);
-        tvEmail = (TextView)findViewById(R.id.tvEmail);
-        tvPhone = (TextView)findViewById(R.id.tvPhone);
-        iveName = (ImageView)findViewById(R.id.iveName);
-        iveEmail = (ImageView)findViewById(R.id.iveEmail);
-        ivePhone = (ImageView)findViewById(R.id.ivePhone);
-        ivePass = (ImageView)findViewById(R.id.ivePass);
-        ivavatar = (ImageView)findViewById(R.id.ivavatar);
-        profileProgressBar = (ProgressBar)findViewById(R.id.profileProgressBar);
-        if(mAuth.getCurrentUser() != null){
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvEmail = (TextView) findViewById(R.id.tvEmail);
+        tvPhone = (TextView) findViewById(R.id.tvPhone);
+        iveName = (ImageView) findViewById(R.id.iveName);
+        iveEmail = (ImageView) findViewById(R.id.iveEmail);
+        ivePhone = (ImageView) findViewById(R.id.ivePhone);
+        ivePass = (ImageView) findViewById(R.id.ivePass);
+        ivavatar = (ImageView) findViewById(R.id.ivavatar);
+        profileProgressBar = (ProgressBar) findViewById(R.id.profileProgressBar);
+        if (mAuth.getCurrentUser() != null) {
             mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    Map<String,String> map = (Map)dataSnapshot.getValue();
+                    Map<String, String> map = (Map) dataSnapshot.getValue();
                     String name = map.get("name");
                     String email = map.get("email");
                     String phone = map.get("phone");
@@ -110,8 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                     tvEmail.setText(email);
                     tvPhone.setText(phone);
                     String avatar = map.get("avatar");
-                    new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
-                            .execute(avatar);
+                    new DownLoadImageTask(ivavatar).execute(avatar);
                     setSupportActionBar(toolbar);
                     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
                     getSupportActionBar().setTitle("");
@@ -142,7 +141,7 @@ public class ProfileActivity extends AppCompatActivity {
         ivePhone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               showDialogPhone();
+                showDialogPhone();
             }
         });
         ivePass.setOnClickListener(new View.OnClickListener() {
@@ -163,7 +162,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    public void showDialogName(){
+    public void showDialogName() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_name, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(c);
@@ -176,8 +175,8 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogBox, int id) {
                         profileProgressBar.setVisibility(View.VISIBLE);
                         if (updateName.getText().toString().equals("")) {
-                            Toast.makeText(ProfileActivity.this,"Name can't be blank",Toast.LENGTH_SHORT).show();
-                        }else{
+                            Toast.makeText(ProfileActivity.this, "Name can't be blank", Toast.LENGTH_SHORT).show();
+                        } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -191,7 +190,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 profileProgressBar.setVisibility(View.INVISIBLE);
                                                 mDatabase.child("Users").child(currentuser).child("name").setValue(updateName.getText().toString());
-                                                Toast.makeText(ProfileActivity.this,"Name updated",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ProfileActivity.this, "Name updated", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -210,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
         alertDialogAndroid.show();
     }
 
-    public void showDialogEmail(){
+    public void showDialogEmail() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_email, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(c);
@@ -223,10 +222,10 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogBox, int id) {
                         profileProgressBar.setVisibility(View.VISIBLE);
                         if (updateEmail.getText().toString().equals("")) {
-                            Toast.makeText(ProfileActivity.this,"Email can't be blank",Toast.LENGTH_SHORT).show();
-                        }else if (!isValidEmailAddress(updateEmail.getText().toString())){
-                            Toast.makeText(ProfileActivity.this,"Email is vaild",Toast.LENGTH_SHORT).show();
-                        }else{
+                            Toast.makeText(ProfileActivity.this, "Email can't be blank", Toast.LENGTH_SHORT).show();
+                        } else if (!isValidEmailAddress(updateEmail.getText().toString())) {
+                            Toast.makeText(ProfileActivity.this, "Email is vaild", Toast.LENGTH_SHORT).show();
+                        } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             user.updateEmail(updateEmail.getText().toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -235,7 +234,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 profileProgressBar.setVisibility(View.INVISIBLE);
                                                 mDatabase.child("Users").child(currentuser).child("email").setValue(updateEmail.getText().toString());
-                                                Toast.makeText(ProfileActivity.this,"User email address updated",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ProfileActivity.this, "User email address updated", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -257,7 +256,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    public void showDialogPhone(){
+    public void showDialogPhone() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_phone, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(c);
@@ -270,11 +269,11 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogBox, int id) {
                         profileProgressBar.setVisibility(View.VISIBLE);
                         if (updatePhone.getText().toString().equals("")) {
-                            Toast.makeText(ProfileActivity.this,"Phone can't be blank",Toast.LENGTH_SHORT).show();
-                        }else{
+                            Toast.makeText(ProfileActivity.this, "Phone can't be blank", Toast.LENGTH_SHORT).show();
+                        } else {
                             profileProgressBar.setVisibility(View.INVISIBLE);
                             mDatabase.child("Users").child(currentuser).child("phone").setValue(updatePhone.getText().toString());
-                            Toast.makeText(ProfileActivity.this,"Phone updated",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivity.this, "Phone updated", Toast.LENGTH_SHORT).show();
                         }
 
 
@@ -293,7 +292,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    public void showDialogPass(){
+    public void showDialogPass() {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(c);
         View mView = layoutInflaterAndroid.inflate(R.layout.dialog_pass, null);
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(c);
@@ -307,11 +306,11 @@ public class ProfileActivity extends AppCompatActivity {
                         profileProgressBar.setVisibility(View.VISIBLE);
                         if (updatePass.getText().toString().equals("")) {
                             profileProgressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(ProfileActivity.this,"Pass can't be blank",Toast.LENGTH_SHORT).show();
-                        }else if (updatePass.getText().toString().length()<6){
+                            Toast.makeText(ProfileActivity.this, "Pass can't be blank", Toast.LENGTH_SHORT).show();
+                        } else if (updatePass.getText().toString().length() < 6) {
                             profileProgressBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(ProfileActivity.this,"Password must be of minimum 6 characters",Toast.LENGTH_SHORT).show();
-                        }else{
+                            Toast.makeText(ProfileActivity.this, "Password must be of minimum 6 characters", Toast.LENGTH_SHORT).show();
+                        } else {
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             user.updatePassword(updatePass.getText().toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -319,7 +318,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 profileProgressBar.setVisibility(View.INVISIBLE);
-                                                Toast.makeText(ProfileActivity.this,"User password updated",Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(ProfileActivity.this, "User password updated", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -348,13 +347,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-
-
-    void showFileChooser(){
+    void showFileChooser() {
         final int REQUEST_CAMERA = 1;
         final int SELECT_FILE = 2;
 
-        final CharSequence[] items = {"Take Photo", "Choose from Library","Cancel"};
+        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Update Avatar");
         builder.setIcon(R.drawable.ic_camera_black_36dp);
@@ -364,14 +361,14 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Take Photo")) {
                     int permissionCheck = ContextCompat.checkSelfPermission(ProfileActivity.this, android.Manifest.permission.CAMERA);
-                    if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                    if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
                         try {
                             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            File dir = new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp");
-                            if (!dir.exists()){
+                            File dir = new File(Environment.getExternalStorageDirectory().getPath() + "/Eznote/temp");
+                            if (!dir.exists()) {
                                 dir.mkdirs();
                             }
-                            cameraFile = File.createTempFile("img", ".png", new File(Environment.getExternalStorageDirectory().getPath() +"/Eznote/temp") );
+                            cameraFile = File.createTempFile("img", ".png", new File(Environment.getExternalStorageDirectory().getPath() + "/Eznote/temp"));
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(ProfileActivity.this, BuildConfig.APPLICATION_ID + ".provider", cameraFile));
                             startActivityForResult(intent, REQUEST_CAMERA);
 
@@ -392,9 +389,9 @@ public class ProfileActivity extends AppCompatActivity {
         builder.show();
     }
 
-    void uploadImage(){
+    void uploadImage() {
         if (!isUploading) {
-            String path = "Avatars/" + currentuser + "/" +"avatar"+ ".png";
+            String path = "Avatars/" + currentuser + "/" + "avatar" + ".png";
 
             StorageReference noteImagesRef = storage.getReference(path);
 
@@ -438,10 +435,9 @@ public class ProfileActivity extends AppCompatActivity {
                                         mDatabase.child("Users").child(currentuser).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                                Map<String,String> map = (Map)dataSnapshot.getValue();
+                                                Map<String, String> map = (Map) dataSnapshot.getValue();
                                                 String avatar = map.get("avatar");
-                                                new DownloadImageTask((ImageView) findViewById(R.id.ivavatar))
-                                                        .execute(avatar);
+                                                new DownLoadImageTask(ivavatar).execute(avatar);
                                                 profileProgressBar.setVisibility(View.INVISIBLE);
 
                                             }
@@ -460,7 +456,7 @@ public class ProfileActivity extends AppCompatActivity {
                     isUploading = false;
                 }
             });
-        }else {
+        } else {
 //            Todo: add toast when uploading
         }
     }
@@ -468,7 +464,7 @@ public class ProfileActivity extends AppCompatActivity {
     public static String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             assert cursor != null;
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -485,16 +481,16 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch(requestCode) {
+        switch (requestCode) {
             case 1:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     imageList.add(cameraFile.getPath());
                     uploadImage();
                 }
 
                 break;
             case 2:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     Uri selectedImage = data.getData();
                     imageList.add(getRealPathFromUri(ProfileActivity.this, selectedImage));
                     uploadImage();
@@ -518,30 +514,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
 
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
-    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -551,6 +524,42 @@ public class ProfileActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DownLoadImageTask extends AsyncTask<String,Void,Bitmap>{
+        ImageView imageView;
+
+        public DownLoadImageTask(ImageView imageView){
+            this.imageView = imageView;
+        }
+
+        /*
+            doInBackground(Params... params)
+                Override this method to perform a computation on a background thread.
+         */
+        protected Bitmap doInBackground(String...urls){
+            String urlOfImage = urls[0];
+            Bitmap logo = null;
+            try{
+                InputStream is = new URL(urlOfImage).openStream();
+                /*
+                    decodeStream(InputStream is)
+                        Decode an input stream into a bitmap.
+                 */
+                logo = BitmapFactory.decodeStream(is);
+            }catch(Exception e){ // Catch the download exception
+                e.printStackTrace();
+            }
+            return logo;
+        }
+
+        /*
+            onPostExecute(Result result)
+                Runs on the UI thread after doInBackground(Params...).
+         */
+        protected void onPostExecute(Bitmap result){
+            imageView.setImageBitmap(result);
+        }
     }
 
 }
