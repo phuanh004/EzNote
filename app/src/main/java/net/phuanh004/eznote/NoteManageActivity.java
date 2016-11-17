@@ -357,6 +357,9 @@ public class NoteManageActivity extends AppCompatActivity {
         } else if (item.getItemId() == R.id.action_add_image){
             showFileChooser();
         }
+        else if (item.getItemId() == R.id.action_share_note){
+
+        }
 
         return super.onOptionsItemSelected(item);
     }

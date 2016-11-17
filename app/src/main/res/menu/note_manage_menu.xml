@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"  >
 
-    <item android:title="Add Audio"
+    <item android:title="Share with"
         app:showAsAction="always"
-        android:icon="@drawable/ic_microphone_white_24dp"
-        android:id="@+id/action_add_audio" />
+        android:icon="@drawable/ic_share_variant_white_24dp"
+        android:id="@+id/action_share_note" />
     <item android:title="Add Image"
         app:showAsAction="always"
         android:icon="@drawable/ic_image_white_24dp"
