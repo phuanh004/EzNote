@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Adapter.ChatHolder;
-import net.phuanh004.eznote.Adapter.NoteHolder;
-import net.phuanh004.eznote.FriendsActivity;
 import net.phuanh004.eznote.MainActivity;
 import net.phuanh004.eznote.Models.Conversation;
 import net.phuanh004.eznote.R;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,10 +31,14 @@ import butterknife.ButterKnife;
  * A simple {@link Fragment} subclass.
  */
 public class AllChatFragment extends Fragment {
+    
+    public static final String TAG = "AllChat";
+    
     @BindView(R.id.allChatProgressBar) ProgressBar allNoteProgressBar;
     @BindView(R.id.allChatRecyclerView) RecyclerView recyclerView;
     public DatabaseReference mDatabase;
     private FirebaseRecyclerAdapter adapter;
+
     private String currentuser;
 
     public AllChatFragment() {
@@ -87,16 +88,47 @@ public class AllChatFragment extends Fragment {
     }
 
     private void setAdapter(){
-
         adapter = new FirebaseRecyclerAdapter<Conversation, ChatHolder>(Conversation.class, R.layout.card_chat, ChatHolder.class, mDatabase.child("Users").child(currentuser).child("chats")) {
             @Override
             protected void populateViewHolder(ChatHolder viewHolder, Conversation model, int position) {
-                viewHolder.setName(model.getSender());
-                viewHolder.setAvatar(model.getAvatar());
-                viewHolder.setLastMessage(model.getLastMessage());
-                viewHolder.setClickListener(model.getSenderId());
+                showChatItemDetail(viewHolder, model);
             }
         };
         recyclerView.setAdapter(adapter);
+    }
+
+    private void showChatItemDetail(ChatHolder viewHolder, Conversation model){
+        if (model.getLastMessage() == null) {
+            return;
+        }
+
+        viewHolder.setName(model.getSender());
+        if (model.getAvatar() != null) {
+            viewHolder.setAvatar(model.getAvatar());
+        }
+        viewHolder.setLastMessage(model.getLastMessage());
+        viewHolder.setClickListener(model.getSenderId());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (recyclerView != null) {
+            recyclerView.getRecycledViewPool().clear();
+            adapter.cleanup();
+        }
+        Log.d(TAG, "onStop: ");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: ");
     }
 }

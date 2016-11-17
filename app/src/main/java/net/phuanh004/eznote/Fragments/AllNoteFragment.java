@@ -160,30 +160,30 @@ public class AllNoteFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
-    private void showDeleteDialog(final String id) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-        builder.setMessage(getString(R.string.dialog_message_delete));
-
-        String positiveText = getString(R.string.delete);
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDatabase.child("Users").child(currentuser).child("notes").child(id).removeValue();
-                    }
-                });
-
-        String negativeText = getString(android.R.string.cancel);
-        builder.setNegativeButton(negativeText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+//    private void showDeleteDialog(final String id) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//
+//        builder.setMessage(getString(R.string.dialog_message_delete));
+//
+//        String positiveText = getString(R.string.delete);
+//        builder.setPositiveButton(positiveText,
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        mDatabase.child("Users").child(currentuser).child("notes").child(id).removeValue();
+//                    }
+//                });
+//
+//        String negativeText = getString(android.R.string.cancel);
+//        builder.setNegativeButton(negativeText,
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
 }

@@ -37,8 +37,9 @@
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.Custom" />
-        <activity android:name=".MainActivity"
-            android:label="@string/title_activity_main"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" />
         <activity
             android:name=".SignUpActivity"
             android:theme="@style/AppTheme.Custom" />
@@ -51,7 +52,11 @@
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme" />
         <activity android:name=".ChatActivity" />
-        <activity android:name=".FriendsActivity"></activity>
+        <activity android:name=".FriendsActivity" />
+        <activity
+            android:name=".AboutUsActivity"
+            android:label="@string/title_activity_about_us"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

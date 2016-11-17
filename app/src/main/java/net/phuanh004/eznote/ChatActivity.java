@@ -3,10 +3,10 @@ package net.phuanh004.eznote;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RotateDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,11 +33,11 @@ import net.phuanh004.eznote.Models.Chat;
 import net.phuanh004.eznote.Models.Conversation;
 
 import java.util.Calendar;
-import java.util.UUID;
+import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity implements FirebaseAuth.AuthStateListener {
 
-    public static final String TAG = "RecyclerViewDemo";
+    public static final String TAG = "ChatActivity";
 
     private FirebaseAuth mAuth;
     private DatabaseReference mRef;
@@ -50,8 +50,9 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
     private LinearLayoutManager mManager;
     private FirebaseRecyclerAdapter<Chat, ChatHolder> mRecyclerViewAdapter;
 
-    private String roomId;
+//    private String roomId;
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +77,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
                 if (dataSnapshot.getValue() == null){
                     DatabaseReference chatRef = mRef.child("Chat").push();
                     mUserChatRef.child("room").setValue(chatRef.getKey());
-                    roomId = chatRef.getKey();
+//                    roomId = chatRef.getKey();
                     mRef.child("Users").child(receiverId).child("chats").child(mAuth.getCurrentUser().getUid()).child("room").setValue(chatRef.getKey());
                     mChatRef = mRef.child("Chats").child(chatRef.getKey());
 
@@ -95,7 +96,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mMessageEdit.getText().toString() != "") {
+                if (!Objects.equals(mMessageEdit.getText().toString(), "")) {
                     final String uid = mAuth.getCurrentUser().getUid();
 
                     mRef.child("Users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -106,7 +107,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
                             long currentTime = cal.getTimeInMillis() / 1000L;
 
                             Chat chat = new Chat(dataSnapshot.child("name").getValue().toString(), uid, mMessageEdit.getText().toString());
-                            Conversation conversation = new Conversation();
+                            final Conversation conversation = new Conversation();
 
                             conversation.setAvatar(dataSnapshot.child("avatar").getValue().toString());
                             conversation.setSender(dataSnapshot.child("name").getValue().toString());
@@ -118,11 +119,20 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
 
                             mRef.child("Users").child(receiverId).child("chats").child(uid).setValue(conversation);
 
-                            conversation.setAvatar(dataSnapshot.child("avatar").getValue().toString());
-                            conversation.setSender(dataSnapshot.child("name").getValue().toString());
-                            conversation.setSenderId(receiverId);
+                            mRef.child("Users").child(receiverId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    conversation.setAvatar(dataSnapshot.child("avatar").getValue().toString());
+                                    conversation.setSender(dataSnapshot.child("name").getValue().toString());
+                                    conversation.setSenderId(receiverId);
+                                    mRef.child("Users").child(uid).child("chats").child(receiverId).setValue(conversation);
+                                }
 
-                            mRef.child("Users").child(uid).child("chats").child(receiverId).setValue(conversation);
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
 
 //                            Log.d(TAG, "onDataChange: "+dataSnapshot );
                             mChatRef.push().setValue(chat, new DatabaseReference.CompletionListener() {
@@ -159,6 +169,7 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
     public void onStop() {
         super.onStop();
         if (mRecyclerViewAdapter != null) {
+            mMessages.getRecycledViewPool().clear();
             mRecyclerViewAdapter.cleanup();
         }
     }
@@ -224,7 +235,8 @@ public class ChatActivity extends AppCompatActivity implements FirebaseAuth.Auth
             mView = itemView;
         }
 
-        public void setIsSender(Boolean isSender) {
+        @SuppressWarnings("ConstantConditions")
+        private void setIsSender(Boolean isSender) {
             FrameLayout left_arrow = (FrameLayout) mView.findViewById(R.id.left_arrow);
             FrameLayout right_arrow = (FrameLayout) mView.findViewById(R.id.right_arrow);
             RelativeLayout messageContainer = (RelativeLayout) mView.findViewById(R.id.message_container);
