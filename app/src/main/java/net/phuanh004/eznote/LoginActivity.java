@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = (Button) findViewById(R.id.btnLogin);
         layoutPass = (TextInputLayout) findViewById(R.id.layoutPass);
         layoutEmail = (TextInputLayout) findViewById(R.id.layoutEmail);
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
         if(mAuth.getCurrentUser() != null){
             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
@@ -110,21 +110,22 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                             startActivity(intent);
                         }else {
-                            tvSignUp.setVisibility(View.VISIBLE);
-                            etEmail.setVisibility(View.VISIBLE);
-                            etPass.setVisibility(View.VISIBLE);
-                            btnLogin.setVisibility(View.VISIBLE);
-                            layoutPass.setVisibility(View.VISIBLE);
-                            layoutEmail.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.INVISIBLE);
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                             NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
                             if (mWifi.isConnected() || mMobile.isConnected()) {
+                                tvSignUp.setVisibility(View.VISIBLE);
+                                etEmail.setVisibility(View.VISIBLE);
+                                etPass.setVisibility(View.VISIBLE);
+                                btnLogin.setVisibility(View.VISIBLE);
+                                layoutPass.setVisibility(View.VISIBLE);
+                                layoutEmail.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(LoginActivity.this, "Incorrect email or password",
                                 Toast.LENGTH_SHORT).show();
                             }else {
@@ -139,6 +140,18 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        tvSignUp.setVisibility(View.VISIBLE);
+        etEmail.setVisibility(View.VISIBLE);
+        etPass.setVisibility(View.VISIBLE);
+        btnLogin.setVisibility(View.VISIBLE);
+        layoutPass.setVisibility(View.VISIBLE);
+        layoutEmail.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
 
