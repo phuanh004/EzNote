@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,6 +34,7 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout layoutNames,layoutEmails,layoutPhones,layoutPasss;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,10 +45,12 @@ public class SignUpActivity extends AppCompatActivity {
         etNames = (EditText) findViewById(R.id.etNames);
         etPhones = (EditText) findViewById(R.id.etPhones);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         layoutPasss = (TextInputLayout) findViewById(R.id.layoutPasss);
         layoutEmails = (TextInputLayout) findViewById(R.id.layoutEmails);
         layoutNames = (TextInputLayout) findViewById(R.id.layoutNames);
         layoutPhones = (TextInputLayout) findViewById(R.id.layoutPhones);
+        progressBar.setVisibility(View.INVISIBLE);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +109,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void SignUp(){
+        etEmails.setVisibility(View.INVISIBLE);
+        etPasss.setVisibility(View.INVISIBLE);
+        etNames.setVisibility(View.INVISIBLE);
+        etPhones.setVisibility(View.INVISIBLE);
+        btnSignUp.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+        layoutPasss.setVisibility(View.INVISIBLE);
+        layoutEmails.setVisibility(View.INVISIBLE);
+        layoutNames.setVisibility(View.INVISIBLE);
+        layoutPhones.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         final String Email = etEmails.getText().toString();
         String Pass = etPasss.getText().toString();
         final String Name = etNames.getText().toString();
@@ -114,32 +129,29 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                    .setDisplayName(etNames.getText().toString())
-                                    .build();
-
-                            user.updateProfile(profileUpdates)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                mDatabase = FirebaseDatabase.getInstance().getReference();
-                                                User mUser = new User(Name,Email,Phone,"");
-                                                mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
-                                                Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
-                                                startActivity(intent);
-                                            }
-                                        }
-                                    });
+                            progressBar.setVisibility(View.INVISIBLE);
+                            mDatabase = FirebaseDatabase.getInstance().getReference();
+                            User mUser = new User(Name,Email,Phone,null);
+                            mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).setValue(mUser);
+                            Intent intent = new Intent(SignUpActivity.this,MainActivity.class);
+                            startActivity(intent);
                         }else {
                             ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
                             NetworkInfo mMobile = connManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
                             if (mWifi.isConnected() || mMobile.isConnected()) {
+                                etEmails.setVisibility(View.VISIBLE);
+                                etPasss.setVisibility(View.VISIBLE);
+                                etNames.setVisibility(View.VISIBLE);
+                                etPhones.setVisibility(View.VISIBLE);
+                                btnSignUp.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.VISIBLE);
+                                layoutPasss.setVisibility(View.VISIBLE);
+                                layoutEmails.setVisibility(View.VISIBLE);
+                                layoutNames.setVisibility(View.VISIBLE);
+                                layoutPhones.setVisibility(View.VISIBLE);
+                                progressBar.setVisibility(View.INVISIBLE);
                                 Toast.makeText(SignUpActivity.this, "Email is already registered",
                                         Toast.LENGTH_SHORT).show();
                             }else {
