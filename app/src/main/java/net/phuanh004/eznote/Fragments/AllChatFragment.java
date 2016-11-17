@@ -24,6 +24,12 @@ import net.phuanh004.eznote.MainActivity;
 import net.phuanh004.eznote.Models.Conversation;
 import net.phuanh004.eznote.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -107,6 +113,19 @@ public class AllChatFragment extends Fragment {
         if (model.getAvatar() != null) {
             viewHolder.setAvatar(model.getAvatar());
         }
+
+        DateFormat simpleDateFormat = SimpleDateFormat.getDateInstance();
+        DateFormat simpleTimeFormat = SimpleDateFormat.getTimeInstance();
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
+        simpleTimeFormat.setTimeZone(TimeZone.getTimeZone(model.getTimeZone()));
+
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("",Locale.getDefault());
+
+
+        viewHolder.setTime(
+                simpleDateFormat.format(new Date(model.getSendedTime() * 1000L)) + "\n" +
+                simpleTimeFormat.format(new Date(model.getSendedTime() * 1000L))
+        );
         viewHolder.setLastMessage(model.getLastMessage());
         viewHolder.setClickListener(model.getSenderId());
     }

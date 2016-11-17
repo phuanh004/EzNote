@@ -42,6 +42,11 @@ public class ChatHolder extends RecyclerView.ViewHolder {
         field.setText(lastMessage);
     }
 
+    public void setTime(String lastMessage){
+        TextView field = (TextView) mView.findViewById(R.id.timeCardChatTextView);
+        field.setText(lastMessage);
+    }
+
     public void setClickListener(final String id){
         CardView cardView = (CardView) mView.findViewById(R.id.chatCardView) ;
 
