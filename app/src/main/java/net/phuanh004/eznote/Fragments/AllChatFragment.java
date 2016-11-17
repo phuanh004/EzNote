@@ -66,6 +66,7 @@ public class AllChatFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = ((MainActivity)getActivity()).currentuser;
+        ((MainActivity)getActivity()).setActionBarTitle(getString(R.string.chat_activity));
 
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -117,18 +118,5 @@ public class AllChatFragment extends Fragment {
             recyclerView.getRecycledViewPool().clear();
             adapter.cleanup();
         }
-        Log.d(TAG, "onStop: ");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: ");
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy: ");
     }
 }

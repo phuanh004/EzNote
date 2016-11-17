@@ -227,6 +227,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_log_out) {
             firebaseAuth.signOut();
+        }else if (id == R.id.nav_about_us){
+            Intent intent = new Intent(MainActivity.this, AboutUsActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -234,6 +237,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void setActionBarTitle(String title){
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+    }
 
 
 }

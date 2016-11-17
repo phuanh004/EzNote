@@ -79,6 +79,7 @@ public class AllNoteFragment extends Fragment {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         currentuser = ((MainActivity)getActivity()).currentuser;
+        ((MainActivity)getActivity()).setActionBarTitle(getString(R.string.title_activity_main));
 
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());

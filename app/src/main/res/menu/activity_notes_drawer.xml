@@ -13,6 +13,11 @@
             android:title="@string/nav_work_chat" />
 
         <item
+            android:id="@+id/nav_about_us"
+            android:icon="@drawable/ic_info"
+            android:title="@string/nav_about_us_title" />
+
+        <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_logout_white_36dp"
             android:title="@string/nav_logout" />
