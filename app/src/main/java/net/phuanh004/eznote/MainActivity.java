@@ -279,5 +279,10 @@ public class MainActivity extends AppCompatActivity
             imageView.setImageBitmap(result);
         }
     }
+    public void setActionBarTitle(String title){
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(title);
+        }
+    }
 
 }
