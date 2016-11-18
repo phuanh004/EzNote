@@ -54,9 +54,10 @@
         <activity android:name=".ChatActivity" />
         <activity android:name=".FriendsActivity" />
         <activity
-            android:name=".AboutUsActivity"
-            android:label="@string/title_activity_about_us"
-            android:theme="@style/AppTheme"></activity>
+            android:name=".AboutAppActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>

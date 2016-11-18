@@ -222,6 +222,10 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment;
         if (!item.isChecked()) {
             switch (id) {
+                case R.id.nav_about_us:
+                    Intent intent = new Intent(MainActivity.this, AboutAppActivity.class);
+                    startActivity(intent);
+                    break;
                 case R.id.nav_note:
                     fab.setImageResource(R.drawable.add);
                     fragment = new AllNoteFragment();
