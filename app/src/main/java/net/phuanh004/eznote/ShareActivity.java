@@ -43,6 +43,7 @@ public class ShareActivity extends AppCompatActivity implements SearchView.OnQue
     private List<User> userList;
     private ShareAdapter adapter;
     private String noteid;
+    private int a;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,33 +76,34 @@ public class ShareActivity extends AppCompatActivity implements SearchView.OnQue
         recyclerView.setAdapter(adapter);
         setAdapter();
 
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override public void onItemClick(View view, final int position) {
-                        Bundle noteBundle = getIntent().getBundleExtra("note1");
-                        noteid = noteBundle.getString("id");
-                        Log.d("chuot",noteid);
-                        mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                Note note = dataSnapshot.getValue(Note.class);
-                                mDatabase.child("Users").child(userList.get(position).getUserId()).child("notes").setValue(note);
-                                Log.d("chuot",userList.get(position).getUserId());
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-                    }
-
-                    @Override public void onLongItemClick(View view, int position) {
-
-                    }
-                })
-        );
+//        recyclerView.addOnItemTouchListener(
+//                new RecyclerItemClickListener(getApplicationContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+//                    @Override public void onItemClick(View view,int position) {
+//                        int a = position;
+//                        Bundle noteBundle = getIntent().getBundleExtra("note1");
+//                        noteid = noteBundle.getString("id");
+//                        Log.d("chuot",noteid);
+//                        mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addValueEventListener(new ValueEventListener() {
+//                            @Override
+//                            public void onDataChange(DataSnapshot dataSnapshot) {
+//                                Note note = dataSnapshot.getValue(Note.class);
+//                                //mDatabase.child("Users").child(userList.get(position).getUserId()).child("notes").setValue(note);
+//                                Log.d("chuot",userList.get(a).getUserId());
+//
+//                            }
+//
+//                            @Override
+//                            public void onCancelled(DatabaseError databaseError) {
+//
+//                            }
+//                        });
+//                    }
+//
+//                    @Override public void onLongItemClick(View view, int position) {
+//
+//                    }
+//                })
+//        );
     }
 
     private void setAdapter(){
