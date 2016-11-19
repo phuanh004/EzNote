@@ -370,7 +370,7 @@ public class NoteManageActivity extends AppCompatActivity {
                 break;
             case 3:
                 if(resultCode == RESULT_OK){
-                    Toast.makeText(NoteManageActivity.this,"Shared",Toast.LENGTH_SHORT);
+                    Toast.makeText(NoteManageActivity.this,"Shared",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

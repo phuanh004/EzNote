@@ -97,6 +97,8 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
                         Note note = dataSnapshot.getValue(Note.class);
                         mDatabase.child("Users").child(userList.get(position).getUserId()).child("notes").child(noteid).setValue(note);
                         Log.d("chuot",userList.get(position).getUserId());
+                        ((Activity)(mContext)).finish();
+
 
                     }
 
