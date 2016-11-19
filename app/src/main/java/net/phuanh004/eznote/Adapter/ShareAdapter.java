@@ -89,13 +89,13 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
                 currentuser = firebaseAuth.getCurrentUser().getUid();
                 mDatabase = FirebaseDatabase.getInstance().getReference();
                 Bundle noteBundle = ((Activity)(mContext)).getIntent().getBundleExtra("note1");
-                String noteid = noteBundle.getString("id");
+                final String noteid = noteBundle.getString("id");
                 Log.d("chuot",noteid);
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Note note = dataSnapshot.getValue(Note.class);
-                        mDatabase.child("Users").child(userList.get(position).getUserId()).child("notes").setValue(note);
+                        mDatabase.child("Users").child(userList.get(position).getUserId()).child("notes").child(noteid).setValue(note);
                         Log.d("chuot",userList.get(position).getUserId());
 
                     }

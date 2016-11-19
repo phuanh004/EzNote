@@ -68,7 +68,6 @@ public class ShareActivity extends AppCompatActivity implements SearchView.OnQue
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-
         userList = new ArrayList<>();
         adapter = new ShareAdapter(this, userList);
 
