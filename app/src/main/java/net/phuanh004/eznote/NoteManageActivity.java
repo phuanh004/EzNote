@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -277,28 +278,6 @@ public class NoteManageActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch(requestCode) {
-            case 1:
-                if(resultCode == RESULT_OK){
-                    imageList.add(cameraFile.getPath());
-                    uploadImage();
-                }
-
-                break;
-            case 2:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = data.getData();
-                    imageList.add(getRealPathFromUri(NoteManageActivity.this, selectedImage));
-                    uploadImage();
-                }
-                break;
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         Note note = new Note();
 
@@ -358,11 +337,43 @@ public class NoteManageActivity extends AppCompatActivity {
             showFileChooser();
         }
         else if (item.getItemId() == R.id.action_share_note){
-
+            Bundle bundle = new Bundle();
+            bundle.putString("id", noteid);
+            Log.d("chuot",noteid);
+            Intent intent = new Intent(NoteManageActivity.this,ShareActivity.class);
+            intent.putExtra("note1",bundle);
+            startActivityForResult(intent,3);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch(requestCode) {
+            case 1:
+                if(resultCode == RESULT_OK){
+                    imageList.add(cameraFile.getPath());
+                    uploadImage();
+                }
+
+                break;
+            case 2:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = data.getData();
+                    imageList.add(getRealPathFromUri(NoteManageActivity.this, selectedImage));
+                    uploadImage();
+                }
+                break;
+            case 3:
+                if(resultCode == RESULT_OK){
+                    Toast.makeText(NoteManageActivity.this,"Shared",Toast.LENGTH_SHORT);
+                }
+                break;
+        }
+    }
 
 }

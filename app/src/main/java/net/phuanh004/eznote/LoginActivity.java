@@ -153,5 +153,6 @@ public class LoginActivity extends AppCompatActivity {
         layoutEmail.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
     }
+
 }
 
