@@ -91,6 +91,7 @@ public class ShareAdapter extends RecyclerView.Adapter<ShareAdapter.MyViewHolder
                 Bundle noteBundle = ((Activity)(mContext)).getIntent().getBundleExtra("note1");
                 final String noteid = noteBundle.getString("id");
                 Log.d("chuot",noteid);
+                Toast.makeText(mContext,"Shared",Toast.LENGTH_SHORT).show();
                 mDatabase.child("Users").child(currentuser).child("notes").child(noteid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
