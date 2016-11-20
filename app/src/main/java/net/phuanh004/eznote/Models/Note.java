@@ -9,8 +9,9 @@ public class Note {
     private String noteId;
     private String title;
     private String content;
-    private long SavedTime;
+    private long savedTime;
     private String timeZone;
+    private String type;
     private HashMap<String, String> images;
 
     public Note() {
@@ -20,9 +21,10 @@ public class Note {
         this.noteId = noteId;
         this.title = title;
         this.content = content;
-        this.SavedTime = savedTime;
+        this.savedTime = savedTime;
         this.timeZone = timeZone;
     }
+
 
     public String getNoteId() {
         return noteId;
@@ -49,11 +51,11 @@ public class Note {
     }
 
     public long getSavedTime() {
-        return SavedTime;
+        return savedTime;
     }
 
     public void setSavedTime(long savedTime) {
-        SavedTime = savedTime;
+        this.savedTime = savedTime;
     }
 
     public String getTimeZone() {

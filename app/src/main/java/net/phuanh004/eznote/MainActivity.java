@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.phuanh004.eznote.Fragments.AllChatFragment;
 import net.phuanh004.eznote.Fragments.AllNoteFragment;
-import net.phuanh004.eznote.Helper.CircleTransform;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -219,13 +217,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+
+        if (id == R.id.nav_about_us){
+            Intent intent = new Intent(MainActivity.this, AboutAppActivity.class);
+            startActivity(intent);
+        }
+
         Fragment fragment;
         if (!item.isChecked()) {
             switch (id) {
-                case R.id.nav_about_us:
-                    Intent intent = new Intent(MainActivity.this, AboutAppActivity.class);
-                    startActivity(intent);
-                    break;
                 case R.id.nav_note:
                     fab.setImageResource(R.drawable.add);
                     fragment = new AllNoteFragment();
